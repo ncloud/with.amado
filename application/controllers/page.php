@@ -12,7 +12,8 @@ class Page extends APP_Controller {
             $files = array( //APPPATH . 'webroot/css/lib/normalize.css',
                             APPPATH . 'webroot/css/lib/reset.css',
                             APPPATH . 'webroot/css/plugin/pickadate.css',
-                            APPPATH . 'webroot/css/plugin/datetime.css',
+                            APPPATH . 'webroot/css/plugin/datetime.css',                            
+                            APPPATH . 'webroot/css/lib/960.css',
                             APPPATH . 'webroot/css/lib/ui.css',
                             APPPATH . 'webroot/css/lib/layout.css');
             $min_contents = $this->minify->combine_files($files, 'css', $this->debug ? false : true);
@@ -38,7 +39,7 @@ class Page extends APP_Controller {
         if($this->user_data->id) {
             $this->view('dashboard');
         } else {
-    	   $this->view('index');
+           $this->view('index');
         }
     }
 
@@ -53,7 +54,7 @@ class Page extends APP_Controller {
             return false;
         }
 
-       	$this->set('join_mode', false);
+        $this->set('join_mode', false);
         $this->view('page/login_or_join');
     }
     
@@ -103,7 +104,17 @@ class Page extends APP_Controller {
 
     public function event($url)
     {
-        echo $url;
+        $this->load->model('m_event');
+
+        if($event = $this->m_event->get_by_url($this->site->id, $url)) {
+            $this->set('event', $event);
+
+            $this->view('page/view');
+        } else {
+            // wrong event
+            redirect('/');
+        }
+        
     }
 
     private function __create($form, &$errors)

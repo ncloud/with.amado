@@ -12,9 +12,14 @@ class m_event extends CI_Model
     }
     //----------------------- PUBLIC METHODS --------------------------//
 
+    function get_by_url($site_id, $url)
+    {
+        return $this->db->from('events')->where('site_id',$site_id)->where('url', $url)->get()->row();
+    }
+
     function check_url_exists($site_id, $url)
     {
-    	if($this->db->from('events')->where('site_id',$site_id)->where('url', $url)->get()->row()) {
+    	if($this->get_by_url($site_id, $url)) {
     		return true;
     	} else {
     		return false;
