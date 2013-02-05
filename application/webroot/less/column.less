@@ -1,0 +1,50 @@
+@import '../style/less/column.less';
+
+//////////
+// GRID //
+//////////
+
+// Specify the number of columns and set column and gutter widths
+@columns: 12;
+@column-width: 60;
+@gutter-width: 20;
+
+// Remove the definition below for a pixel-based layout
+@total-width: 100%;
+@ratio-height: 30%;
+
+
+////////////
+// LAYOUT //
+////////////
+
+// header
+header#top {
+	margin-bottom: 1em;
+}
+
+// main column
+// main column
+#maincolumn {
+  .column(12);
+  
+  ul#boxes {
+    li {
+      .column(4);
+      margin-bottom: 1.5em;
+    }
+  }
+}
+
+@media screen and (max-width: 960px) {
+  #maincolumn ul#boxes li {
+    .column(6);
+    margin-bottom: 1.5em;
+  }
+}
+@media screen and (max-width: 480px) {
+	#maincolumn ul#boxes li {
+		.column(12);
+		margin-bottom: 1.5em;
+	}
+}

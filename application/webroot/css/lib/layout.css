@@ -1,0 +1,103 @@
+body {
+    font-family: "나눔고딕", "NanumGothic", "맑은고딕", "Malgun Gothic", "Helvetica", "Tahoma";
+    font-size: 12px;
+    background:url(../../img/layout/background.png) repeat;
+}
+
+header { background:#fff; margin-bottom:20px; border-bottom:1px solid #ddd;}
+	header h1 { font-size:18px; font-weight:bold; color:#333; }
+		header h1 a { color:#333; text-decoration:none; }
+		header h1 a:hover { text-decoration:underline; }
+
+	header .contents_wrap { padding-top:20px; padding-bottom:20px; }
+	header .user_wrap { position:absolute; right:0; top:10px; }
+		header .user_wrap .user { display:block; float:left; margin:5px; margin-right:10px; }
+			header .user_wrap .user img { width: 30px; height:30px; display: inline-block; vertical-align: middle; margin-right: 4px; background:#eee; }
+			header .user_wrap .user span { display:inline-block; vertical-align:middle; }
+
+/* login or joing */
+.login_or_join_wrap { width:540px; margin:0 auto; }
+	.login_or_join_wrap .social_wrap { float:left; width:264px; text-align:right; }
+	.login_or_join_wrap .user_wrap { float:left; width:234px; padding-left:30px; border-left:1px solid #ccc; box-shadow:inset 1px 0px 0px rgba(255,255,255,0.1);  }
+		
+		.login_or_join_wrap .social_wrap h3 { width:264px;  height:80px; }
+			.login_or_join_wrap .social_wrap h3 a { display:inline-block; margin-right:38px; width:193px; height:35px; }
+				.login_or_join_wrap .social_wrap h3 a span { }
+				
+		.login_or_join_wrap .social_wrap a.facebook_button { display:inline-block; width:182px; font-weight:bold; font-size:13px; line-height:16px; border:1px solid #000; margin-right:38px; text-align:center; }
+		
+		.login_or_join_wrap .user_wrap .login_wrap,
+		.login_or_join_wrap .user_wrap .join_wrap { margin-left:38px; }
+		
+		.login_or_join_wrap .user_wrap .input_wrap {  width:198px; height:60px; margin-bottom:16px; border:1px solid #000; box-shadow:inset 0px 1px 2px rgba(0,0,0,0.1); border-radius:6px; overflow:hidden; background:#fff; -webkit-transition: height 0.3s ease-out; -moz-transition: height 0.3s ease-out; -ms-transition: height 0.3s ease-out; -o-transition: height 0.3s ease-out; transition: height 0.3s ease-out;  }
+			.login_or_join_wrap .user_wrap .join_mode .input_wrap { height:90px; }
+			.login_or_join_wrap .user_wrap .input_wrap input { padding:10px; font-size:11px; border:0; padding:8px; width:182px; outline:none; color:#000; font-weight:bold; }
+				
+				.login_or_join_wrap .user_wrap .input_wrap input:focus::-webkit-input-placeholder { color:#ccc; }
+				.login_or_join_wrap .user_wrap .input_wrap input:focus:-moz-placeholder  { color:#ccc; }
+
+				.login_or_join_wrap .user_wrap .input_wrap input.email { border-bottom:1px solid #c4c4c4; }
+				.login_or_join_wrap .user_wrap .input_wrap input.password {}
+					.login_or_join_wrap .user_wrap .join_mode input.password { border-bottom:1px solid #c4c4c4; }
+					
+				.login_or_join_wrap .user_wrap .input_wrap input.username {}
+					.login_or_join_wrap .user_wrap .login_mode input.username { display:none; }
+					
+			.login_or_join_wrap .user_wrap .submit_wrap { position:relative; }
+			.login_or_join_wrap .user_wrap .submit_wrap .hidden { position:absolute; left:-10000px; }
+			
+		.login_or_join_wrap .user_wrap a { width:182px; text-align:center; }
+		
+		.login_or_join_wrap .user_wrap .or { text-align:center; color:#949494; margin-top:20px; margin-bottom:20px; margin-left:38px; margin-right:27px; }
+
+/* login */
+.login_wrap { width:260px; margin:0 auto; padding-top:100px; }
+
+
+/* contents wrap */
+.contents_wrap { width:960px; margin:0 auto; position:relative; }
+	.contents_wrap .create_header_wrap { text-align:center; margin-bottom:10px; }
+
+	.contents_wrap .main_title { font-size:15px; color:#999; font-weight:bold; padding-bottom:20px; border-bottom:2px solid #ccc; }
+	.contents_wrap .hint_title { font-size:13px; color:#999; text-shadow:0px 1px 1px #fff; font-weight:bold; padding-bottom:10px; border-bottom:2px solid #999; margin-bottom:10px; }
+
+	.contents_wrap .event_list { margin-bottom:30px; }
+		.contents_wrap .event_list li { margin-bottom:10px; padding-bottom:10px; border-bottom:1px dotted #ccc; }
+		.contents_wrap .event_list li:last-child { padding-bottom:0; border-bottom:0; }
+		.contents_wrap .event_list li h4 { font-size:15px; color:#444; font-weight:bold;}
+			.contents_wrap .event_list li h4 a { color:#444; text-decoration:none; }
+			.contents_wrap .event_list li h4 a:hover { text-decoration:underline; }
+		.contents_wrap .event_list li.empty { color:#888; }
+
+/* create */
+.create_wrap {}
+		.create_wrap section.input_group { border-bottom:1px dotted #ccc; padding-top:10px; padding-bottom:10px; position:relative; }
+		.create_wrap section.input_group .title { position:absolute; top:19px; font-size:14px; font-weight:bold; color:#666; width:150px; line-height:22px; }
+			.create_wrap section.input_group .title .required { color:#a11d21; }
+		.create_wrap section.input_group .input { position:relative; margin-left:150px; top:0;  }
+			.create_wrap section.input_group .input label { font-size:12px; display:inline-block; margin-left:5px; }
+			.create_wrap section.input_group .input button { margin:0; margin-right:5px; }
+				.create_wrap section.input_group .input button span.label { padding-left:6px; padding-right:6px; }
+			.create_wrap section.input_group .input input[type=text],
+			.create_wrap section.input_group .input input[type=password],
+			.create_wrap section.input_group .input textarea { width:400px; }
+
+			.create_wrap section.input_group .input input[type=text].date { width:120px; margin-right:10px; }
+			.create_wrap section.input_group .input input[type=text].time { width:120px; }
+
+			.create_wrap section.input_group .input input[type=text].person { width:50px; }
+
+			.create_wrap section.input_group .input input[type=text].url { width:200px; margin-left:6px; }
+
+			.create_wrap section.input_group:last-child { border-bottom:0; }
+
+			.create_wrap section.input_group .input .sub_input { position:absolute; left:312px; top:6px; width:100px; text-align: right; line-height:34px;  }
+				.create_wrap section.input_group .input .sub_input a {}
+
+
+		.create_wrap .more_date_wrap_option { display:none; }
+		.create_wrap .adv_wrap_option { display:none; }
+
+		.visible_more_date_wrap .more_date_wrap_option { display:block; }
+		.visible_adv_option_wrap .adv_wrap_option { display:block; }
+
