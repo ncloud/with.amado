@@ -1,10 +1,11 @@
 
-	<div class="contents_wrap view_wrap">
-		<div class="container_12">
-			<div class="grid_8">
+	<div class="grid contents_wrap view_wrap">
+		<div class="row">
+			<div class="slot-0-1-2-3">
 				<h3><?php echo $event->title;?></h3>
 			</div>
-			<div class="grid_4">
+			<div class="slot-4-5">
+				tt
 			</div>
 		</div>
 	</div>

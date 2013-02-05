@@ -4,7 +4,7 @@
 		$default_view_adv_option = true;
 	?>
 
-	<div class="contents_wrap create_wrap<?php echo $default_view_rsvp_end ? ' visible_more_date_wrap' : '';?><?php echo $default_view_adv_option ? ' visible_adv_option_wrap' : '';?>">
+	<div class="grid contents_wrap create_wrap<?php echo $default_view_rsvp_end ? ' visible_more_date_wrap' : '';?><?php echo $default_view_adv_option ? ' visible_adv_option_wrap' : '';?>">
 		<form method="POST" onsubmit="return create_event();">
 			<input type="hidden" name="set_rsvp_end" value="<?php echo isset($defaults['set_rsvp_end']) ? $defaults['set_rsvp_end'] : 'false';?>" />
 

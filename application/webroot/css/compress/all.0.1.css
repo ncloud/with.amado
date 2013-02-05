@@ -1917,13 +1917,13 @@ body {
 }
 
 header { background:#fff; margin-bottom:20px; border-bottom:1px solid #ddd;}
-	header h1 { font-size:18px; font-weight:bold; color:#333; }
+	header h1 { font-size:18px; font-weight:bold; color:#333; padding-top:8px; }
 		header h1 a { color:#333; text-decoration:none; }
 		header h1 a:hover { text-decoration:underline; }
 
-	header .contents_wrap { padding-top:20px; padding-bottom:20px; }
-	header .user_wrap { position:absolute; right:0; top:10px; }
-		header .user_wrap .user { display:block; float:left; margin:5px; margin-right:10px; }
+	header .contents_wrap { padding-top:10px; padding-bottom:10px; }
+	header .user_wrap { text-align:right; }
+		header .user_wrap .user { display:inline-block; margin:5px; margin-right:10px; }
 			header .user_wrap .user img { width: 30px; height:30px; display: inline-block; vertical-align: middle; margin-right: 4px; background:#eee; }
 			header .user_wrap .user span { display:inline-block; vertical-align:middle; }
 
@@ -1967,7 +1967,7 @@ header { background:#fff; margin-bottom:20px; border-bottom:1px solid #ddd;}
 
 
 /* contents wrap */
-.contents_wrap { width:960px; margin:0 auto; position:relative; }
+.contents_wrap { position:relative; }
 	.contents_wrap .create_header_wrap { text-align:center; margin-bottom:10px; }
 
 	.contents_wrap .main_title { font-size:15px; color:#999; font-weight:bold; padding-bottom:20px; border-bottom:2px solid #ccc; }
@@ -2012,4 +2012,7 @@ header { background:#fff; margin-bottom:20px; border-bottom:1px solid #ddd;}
 
 		.visible_more_date_wrap .more_date_wrap_option { display:block; }
 		.visible_adv_option_wrap .adv_wrap_option { display:block; }
+
+/* view */
+.view_wrap { padding-bottom:20px !important; }
 

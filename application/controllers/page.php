@@ -13,7 +13,6 @@ class Page extends APP_Controller {
                             APPPATH . 'webroot/css/lib/reset.css',
                             APPPATH . 'webroot/css/plugin/pickadate.css',
                             APPPATH . 'webroot/css/plugin/datetime.css',                            
-                            APPPATH . 'webroot/css/lib/960.css',
                             APPPATH . 'webroot/css/lib/ui.css',
                             APPPATH . 'webroot/css/lib/layout.css');
             $min_contents = $this->minify->combine_files($files, 'css', $this->debug ? false : true);

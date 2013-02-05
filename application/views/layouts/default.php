@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="<?php echo site_url('/less/elusive-webfont.less');?>" type="text/less" media="screen" />
     <link rel="stylesheet" href="<?php echo site_url('/css/compress/all.' . $this->config->item('app_version') . '.css');?>" type="text/css" media="screen" />
     
+    <!--[if lt IE 9 ]><link rel="stylesheet" href="<?php echo site_url('/css/lib/720_grid.css');?>" type="text/css"><![endif]-->
+    <link rel="stylesheet" href="<?php echo site_url('/css/lib/720_grid.css');?>" type="text/css" media="screen and (min-width: 720px)">
+
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
     <script type="text/javascript" src="<?php echo site_url('/js/compress/all.' . $this->config->item('app_version') . '.js');?>"></script>
     <!--[if lt IE 9]><script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -51,23 +54,25 @@
          });
     </script>
     <header>
-        <div class="contents_wrap">
-            <h1><a href="<?php echo site_url('/');?>"><?php echo $title_for_layout;?></a></h1>
-            <div class="user_wrap">
-                <?php if($current_user->id) {
-                ?>
-                <span class="user"><img src="<?php echo $current_user->profile;?>" alt="profile" /><span><?php echo $current_user->name;?></span></span>
-                <form style="display: inline" action="<?php echo site_url('/logout');?>" method="get">
-                    <button class="red"><span class="label">로그아웃</span></button>
-                </form>
-                <?php
-                } else {
-                ?> 
-                <form style="display: inline" onsubmit="user.facebook_login(); return false;" action="<?php echo site_url('/login');?>" method="get">
-                    <button class="blue"><span class="label">페이스북 로그인</span></button>
-                </form>
-                <?php
-                } ?>
+        <div class="grid contents_wrap">
+            <div class="row">
+                <h1 class='slot-0-1-2-3'><a href="<?php echo site_url('/');?>"><?php echo $title_for_layout;?></a></h1>
+                <div class="slot-4-5 user_wrap">
+                    <?php if($current_user->id) {
+                    ?>
+                    <span class="user"><img src="<?php echo $current_user->profile;?>" alt="profile" /><span><?php echo $current_user->name;?></span></span>
+                    <form style="display: inline" action="<?php echo site_url('/logout');?>" method="get">
+                        <button class="red"><span class="label">로그아웃</span></button>
+                    </form>
+                    <?php
+                    } else {
+                    ?> 
+                    <form style="display: inline" onsubmit="user.facebook_login(); return false;" action="<?php echo site_url('/login');?>" method="get">
+                        <button class="blue"><span class="label">페이스북 로그인</span></button>
+                    </form>
+                    <?php
+                    } ?>
+                </div>
             </div>
         </div>
     </header>
