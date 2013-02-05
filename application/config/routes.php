@@ -53,5 +53,7 @@ $route['step/welcome']							= 'page/welcome';
 // Create
 $route['create']								= 'page/create';
 
+$route['(:any)']                             	= 'page/event/$1';
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

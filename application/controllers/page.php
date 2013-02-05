@@ -101,6 +101,11 @@ class Page extends APP_Controller {
         $this->view('page/create');
     }
 
+    public function event($url)
+    {
+        echo $url;
+    }
+
     private function __create($form, &$errors)
     {
         $data = new StdClass;
