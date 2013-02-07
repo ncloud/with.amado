@@ -1907,6 +1907,11 @@ iframe { border:none; }
 		color: #fff;
 	}
 
+/* progress */
+	.bar_progress { position:relative; height:10px; background:#eee; overflow:hidden; }
+		.bar_progress .fill { position:absolute; height:10px; background:red; }
+		.bar_progress .remain { position:absolute; left:0; top:0; height:10px; background:#aaa; box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2), 0px 1px 1px rgba(255,255,255,0.2); }
+
 
 /* @fileRef layout.css */
 
@@ -1926,6 +1931,103 @@ header { background:#fff; margin-bottom:20px; border-bottom:1px solid #ddd;}
 		header .user_wrap .user { display:inline-block; margin:5px; margin-right:10px; }
 			header .user_wrap .user img { width: 30px; height:30px; display: inline-block; vertical-align: middle; margin-right: 4px; background:#eee; }
 			header .user_wrap .user span { display:inline-block; vertical-align:middle; }
+
+article {}
+
+	article h1, article h2, article h3, article h4 {
+	    color: #111111;
+	    font-weight: 400;
+	}
+	article h1, article h2, article h3, article h4, article h5, article p {
+	    margin-bottom: 24px;
+	    padding: 0;
+	}
+	article h1 {
+	    font-size: 20px;
+	}
+	article h2 {
+	    font-size: 16px;
+	    /* The bottom margin is small. It's designed to be used with gray meta text
+	     * below a post title. */
+	    margin: 24px 0 6px;
+	}
+	article h3 {
+	    font-size: 14px;
+	}
+	article h4 {
+	    font-size: 13px;
+	}
+	article h5 {
+	    font-size: 13px;
+	}
+	article a {
+	    color: #0099ff;
+	    margin: 0;
+	    padding: 0;
+	    vertical-align: baseline;
+	}
+	article a:hover {
+	    text-decoration: none;
+	    color: #ff6600;
+	}
+	article a:visited {
+	    color: purple;
+	}
+	article ul, article ol {
+	    padding: 0;
+	    margin: 0;
+	}
+	article li {
+	    line-height: 24px;
+	}
+	article li ul, article li ul {
+	    margin-left: 24px;
+	}
+	article p, article ul, article ol {
+	    font-size: 13px;
+	    line-height: 24px;
+	    max-width: 540px;
+	}
+	article pre {
+	    padding: 0px 24px;
+	    max-width: 800px;
+	    white-space: pre-wrap;
+	}
+	article code {
+	    font-family: Consolas, Monaco, Andale Mono, monospace;
+	    line-height: 1.5;
+	    font-size: 13px;
+	}
+	article aside {
+	    display: block;
+	    float: right;
+	    width: 390px;
+	}
+	article blockquote {
+	    border-left:.5em solid #eee;
+	    padding: 0 2em;
+	    margin-left:0;
+	    max-width: 476px;
+	}
+	article blockquote  cite {
+	    font-size:13px;
+	    line-height:20px;
+	    color:#bfbfbf;
+	}
+	article blockquote cite:before {
+	    content: '\2014 \00A0';
+	}
+
+	article blockquote p {  
+	    color: #666;
+	    max-width: 460px;
+	}
+	article hr {
+	    width: 540px;
+	    text-align: left;
+	    margin: 0 auto 0 0;
+	    color: #999;
+	}
 
 /* login or joing */
 .login_or_join_wrap { width:540px; margin:0 auto; }
@@ -2015,4 +2117,14 @@ header { background:#fff; margin-bottom:20px; border-bottom:1px solid #ddd;}
 
 /* view */
 .view_wrap { padding-bottom:20px !important; }
+	.view_wrap h3 { font-weight:bold; margin-bottom:20px; }
+	.view_wrap article { }
+
+	.view_wrap .title_wrap { position:relative; margin-bottom:20px; }
+		.view_wrap .title_wrap .status_wrap { position:absolute; right:0; top:0; font-size:12px; }
+		.view_wrap .title_wrap .status_wrap strong { font-weight:bold; }
+		.view_wrap .title_wrap .status_wrap .percent { display:inline-block; margin-right:10px; height:20px; vertical-align:middle; padding-left:20px; line-height:20px; background:url(../../img/icon/percent.png) no-repeat left center; }
+		.view_wrap .title_wrap .status_wrap .remain { display:inline-block; padding-left:20px; height:20px; vertical-align:middle; line-height:20px; background:url(../../img/icon/clock.png) no-repeat left center; }
+
+	.view_wrap .join_wrap { text-align:right; }
 

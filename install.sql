@@ -1,29 +1,4 @@
-# ************************************************************
-# Sequel Pro SQL dump
-# Version 3408
-#
-# http://www.sequelpro.com/
-# http://code.google.com/p/sequel-pro/
-#
-# Host: localhost (MySQL 5.5.25)
-# Database: catchr
-# Generation Time: 2013-02-05 15:58:31 +0000
-# ************************************************************
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
-
-# Dump of table events
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `events`;
 
 CREATE TABLE `events` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -35,8 +10,8 @@ CREATE TABLE `events` (
   `url` varchar(64) DEFAULT NULL,
   `opt_enable_private_join` enum('yes','no') DEFAULT 'yes',
   `opt_add_input_contact` enum('yes','no') DEFAULT 'no',
-  `rsvp_now` int(11) unsigned DEFAULT NULL,
-  `rsvp_max` int(11) DEFAULT NULL,
+  `rsvp_now` int(11) unsigned DEFAULT 0,
+  `rsvp_max` int(11) unsigned DEFAULT 0,
   `rsvp_button_text` varchar(32) DEFAULT NULL,
   `rsvp_before_text` text,
   `rsvp_after_text` text,
@@ -50,11 +25,6 @@ CREATE TABLE `events` (
   UNIQUE KEY `URL` (`url`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-
-# Dump of table role_users
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `role_users`;
 
 CREATE TABLE `role_users` (
   `user_id` bigint(20) unsigned NOT NULL,
@@ -70,15 +40,6 @@ INSERT INTO `role_users` (`user_id`, `role_id`)
 VALUES
   (1,1);
 
-/*!40000 ALTER TABLE `role_users` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table roles
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `roles`;
-
 CREATE TABLE `roles` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
@@ -86,12 +47,6 @@ CREATE TABLE `roles` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-# Dump of table sessions
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `sessions`;
 
 CREATE TABLE `sessions` (
   `session_id` varchar(40) NOT NULL DEFAULT '0',
@@ -104,11 +59,6 @@ CREATE TABLE `sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-# Dump of table sites
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `sites`;
-
 CREATE TABLE `sites` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `host` varchar(64) DEFAULT NULL,
@@ -116,11 +66,6 @@ CREATE TABLE `sites` (
   KEY `domain` (`host`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-# Dump of table user_tokens
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `user_tokens`;
 
 CREATE TABLE `user_tokens` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -136,11 +81,6 @@ CREATE TABLE `user_tokens` (
   UNIQUE KEY `user_id` (`user_id`,`vendor_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-# Dump of table users
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -165,10 +105,24 @@ CREATE TABLE `users` (
   UNIQUE KEY `vendor_id` (`vendor_id`,`vendor_user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `rsvps` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `event_id` int(11) unsigned DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `is_private` enum('yes','no') DEFAULT 'no',
+  `private_profile` varchar(128) DEFAULT NULL,
+  `private_name` varchar(64) DEFAULT NULL,
+  `insert_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `event_id` (`event_id`,`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+CREATE TABLE `histories` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `event_id` int(11) unsigned DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `type` varchar(16) DEFAULT NULL,
+  `message` text,
+  `insert_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

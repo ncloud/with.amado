@@ -1,5 +1,5 @@
 
-	<div class="contents_wrap">
+	<div class="grid contents_wrap">
 		<div class="create_header_wrap">
 			<form style="display: inline" action="<?php echo site_url('/create');?>" method="get">
 				<button class="green"><span class="label">모임 만들기</span></button>

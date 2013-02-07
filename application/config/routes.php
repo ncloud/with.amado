@@ -52,6 +52,8 @@ $route['step/welcome']							= 'page/welcome';
 
 // Create
 $route['create']								= 'page/create';
+$route['event/in/(:num)']						= 'page/event_in/$1';
+$route['event/out/(:num)']						= 'page/event_out/$1';
 
 $route['(:any)']                             	= 'page/event/$1';
 

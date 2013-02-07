@@ -160,9 +160,8 @@ class User extends APP_Controller
                         $profile = 'http://graph.facebook.com/' . $me['id'] . '/picture';
                         
                         $display_name = isset($me['username']) ? $me['username'] : $me['name'];
-                        $user_name = isset($me['username']) ? $me['username'] : '';
                         
-                        $user = $this->m_user->authenticate_vendor('facebook', $me['id'], $me['name'], $display_name, $user_name, $profile);
+                        $user = $this->m_user->authenticate_vendor('facebook', $me['id'], $me['name'], $display_name, $profile);
                         if($user->now_joined) { // 지금 첫 가입했을 경우 ..
                            
                         }

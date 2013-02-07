@@ -86,11 +86,9 @@ class Page extends APP_Controller {
             $data = $this->__create($_POST, $errors);
             if($data) {
                 if($event_id = $this->m_event->create($data)) {
-                    if(isset($data->url)) {
-                        redirect('/' . $data->url);
-                    }
+                    $data->id = $event_id;
 
-                    redirect('/' . $event_id);
+                    $this->__auto_redirect($data);
                 }
             }
         }
@@ -105,15 +103,72 @@ class Page extends APP_Controller {
     {
         $this->load->model('m_event');
 
-        if($event = $this->m_event->get_by_url($this->site->id, $url)) {
+        require_once(APPPATH . '/vendors/markdown' . EXT);
+
+        if(is_numeric($url)) {
+            $event = $this->m_event->get($url);
+        } else {
+             $event = $this->m_event->get_by_url($this->site->id, $url);
+        }
+
+        if($event) {
+            $now = mktime();
+
+            $event->rsvp_percent = round($event->rsvp_now / $event->rsvp_max * 100);
+            $event->description = trim(Markdown($event->description));
+
+            if(strtotime($event->rsvp_start_time) <= $now) {
+                $event->is_end = true;
+            } else {
+                $event->is_end = false;
+            }
+
             $this->set('event', $event);
+
+            $rsvps =$this->m_event->gets_rsvp($event->id);
+            $this->set('rsvps', $rsvps);
+
+            $me_rsvp_in = false;
+            foreach($rsvps as $rsvp) {
+                if($rsvp->user_id == $this->user_data->id) {
+                    $me_rsvp_in = true;
+                    break;
+                }
+            }
+            $this->set('me_rsvp_in',$me_rsvp_in);
 
             $this->view('page/view');
         } else {
             // wrong event
             redirect('/');
         }
-        
+    }
+
+    public function event_in($id)
+    {
+        if(!$this->user_data->id) redirect('/');
+
+        $this->load->model('m_event');
+        $this->load->model('m_history');
+
+        $event = $this->m_event->get($id);
+        if($event) {
+            if($this->m_event->check_in($id, $this->user_data->id)) { // 이미 참석함
+                $this->__auto_redirect($event);
+            } else if($event->rsvp_max == $event->rsvp_now) { // 정원이 가득참
+                $this->__auto_redirect($event);
+            } else {
+                $this->m_event->rsvp_in($event->id, $this->user_data->id);
+                $this->m_event->event_increment_count($event->id, 'rsvp_now');
+
+                $this->m_history->add($event->id, $this->user_data->id, 'RSVP_IN', array('%1님이 "%2" 이벤트에 참석합니다.', array($this->user_data->id, $event->id)));
+
+                $this->__auto_redirect($event);
+            }
+        } else {
+            redirect('/');
+        }
+
     }
 
     private function __create($form, &$errors)
@@ -198,6 +253,8 @@ class Page extends APP_Controller {
         $data->site_id = $this->site->id;
         $data->user_id = $this->user_data->id;
 
+        $data->create_time = date('Y-m-d H:i:s', mktime());
+
         /// ---- 선택 ----
         $data->description = isset($form['description']) ? $form['description'] : '';
         $data->opt_enable_private_join = isset($form['opt_enable_private_join']) && $form['opt_enable_private_join'] == 'on' ? 'yes' : 'no';
@@ -238,6 +295,14 @@ class Page extends APP_Controller {
         }
 
         return $data;
+    }
+
+    private function __auto_redirect($event) {
+        if(isset($event->url) && !empty($event->url)) {
+            redirect('/' . $event->url);
+        }
+
+        redirect('/' . $event->id);
     }
 }
 ?>

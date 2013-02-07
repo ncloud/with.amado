@@ -1,7 +1,7 @@
 
 	<?php
 		$default_view_rsvp_end = isset($defaults['set_rsvp_end']) && $defaults['set_rsvp_end'] == 'true';
-		$default_view_adv_option = true;
+		$default_view_adv_option = false;
 	?>
 
 	<div class="grid contents_wrap create_wrap<?php echo $default_view_rsvp_end ? ' visible_more_date_wrap' : '';?><?php echo $default_view_adv_option ? ' visible_adv_option_wrap' : '';?>">
