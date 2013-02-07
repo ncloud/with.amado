@@ -25,6 +25,7 @@ class Page extends APP_Controller {
             $files = array( APPPATH . 'webroot/js/lib/basic.js',
                             APPPATH . 'webroot/js/plugin/pickadate.js',
                             APPPATH . 'webroot/js/plugin/jquery.datetime.js',
+                            APPPATH . 'webroot/js/plugin/jquery.textchange.js',
                             APPPATH . 'webroot/js/lib/user.js',
                             APPPATH . 'webroot/js/lib/less.js');
                           
@@ -153,15 +154,64 @@ class Page extends APP_Controller {
 
         $event = $this->m_event->get($id);
         if($event) {
-            if($this->m_event->check_in($id, $this->user_data->id)) { // 이미 참석함
-                $this->__auto_redirect($event);
-            } else if($event->rsvp_max == $event->rsvp_now) { // 정원이 가득참
+            if($_POST) {
+                if($this->m_event->check_in($id, $this->user_data->id)) { // 이미 참석함
+                    $this->__auto_redirect($event);
+                } else if($event->rsvp_max == $event->rsvp_now) { // 정원이 가득참
+                    $this->__auto_redirect($event);
+                } else {
+                    $errors = array();
+
+                    if($data = $this->__in($event, $_POST, $errors)) {
+                        $this->m_event->rsvp_in($data);
+                        $this->m_event->event_increment_count($event->id, 'rsvp_now');
+
+                        $this->m_history->add($event->id, $this->user_data->id, 'RSVP_IN', array('%1님이 "%2" 이벤트에 참석합니다.', array($this->user_data->id, $event->id)));
+
+                        $this->__auto_redirect($event);
+                    }
+                    
+                    $this->set('event', $event);
+
+                    $this->set('errors', $errors);
+                    $this->set('defaults', $_POST);
+
+                    $this->view('page/event_in');
+                } 
+            } else {
+                $error_message = '';
+                if($this->m_event->check_in($id, $this->user_data->id)) { // 이미 참석함
+                    $error_message = '이미 참석하셨습니다.';
+                } else if($event->rsvp_max == $event->rsvp_now) { // 정원이 가득참
+                    $error_message = '정원이 찼습니다.';
+                } 
+
+                $this->set('event', $event);
+                $this->set('error_message', $error_message);
+
+                $this->view('page/event_in');
+            }
+        } else {
+            redirect('/');
+        }
+    }
+
+    public function event_out($id)
+    {
+        if(!$this->user_data->id) redirect('/');
+
+        $this->load->model('m_event');
+        $this->load->model('m_history');
+
+        $event = $this->m_event->get($id);
+        if($event) {
+            if(!$this->m_event->check_in($id, $this->user_data->id)) { // 참석하지 않은 상태
                 $this->__auto_redirect($event);
             } else {
-                $this->m_event->rsvp_in($event->id, $this->user_data->id);
-                $this->m_event->event_increment_count($event->id, 'rsvp_now');
+                $this->m_event->rsvp_out($event->id, $this->user_data->id);
+                $this->m_event->event_decrement_count($event->id, 'rsvp_now');
 
-                $this->m_history->add($event->id, $this->user_data->id, 'RSVP_IN', array('%1님이 "%2" 이벤트에 참석합니다.', array($this->user_data->id, $event->id)));
+                $this->m_history->add($event->id, $this->user_data->id, 'RSVP_OUT', array('%1님이 "%2" 이벤트에서 참석 취소하셨습니다.', array($this->user_data->id, $event->id)));
 
                 $this->__auto_redirect($event);
             }
@@ -169,6 +219,43 @@ class Page extends APP_Controller {
             redirect('/');
         }
 
+    }
+
+    private function __in($event, $form, &$errors)
+    {
+        $data = new StdClass;
+
+        /// ---- 필수 ----
+        // contact
+        if($event->opt_add_input_contact=='yes') {
+            if(!isset($form['contact']) || empty($form['contact'])) {
+               $errors['contact'] = '연락처를 입력해주세요.';
+               return false;
+            } else { $data->contact = $form['contact']; }
+        }
+
+        // private_name
+        if($event->opt_enable_private_join=='yes') {
+            if((isset($form['enable_private_join']) && $form['enable_private_join'] == 'on') && (isset($form['private_name']) && !empty($form['private_name']))) {
+                $data->is_private = 'yes';
+                $data->private_name = $form['private_name']; 
+            } else {
+                $errors['private_name'] = '익명을 입력해주세요.';
+                return false;
+            }
+        } else {
+            $data->is_private = 'no';
+        }
+
+        /// ---- 기본 ----
+        $data->event_id = $event->id;
+        $data->user_id = $this->user_data->id;       
+
+        /// ---- 선택 ----
+        $data->message = isset($form['message']) ? $form['message'] : '';
+ 
+
+        return $data;
     }
 
     private function __create($form, &$errors)

@@ -13,7 +13,7 @@ class m_event extends CI_Model
     //----------------------- PUBLIC METHODS --------------------------//
 
     function get($id) {
-        return $this->db->from('events')->where('id', $id)->get()->row();        
+        return $this->db->from('events')->join('users','users.id = events.user_id')->where('events.id', $id)->select('events.*, users.profile as user_profile, users.display_name as user_display_name')->get()->row();        
     }
 
     function get_by_url($site_id, $url)
@@ -43,14 +43,24 @@ class m_event extends CI_Model
     	return false;
     }
 
-    function rsvp_in($event_id, $user_id)
+    function rsvp_in($event_id, $user_id = null)
     {
-        $data = new StdClass;
-        $data->event_id = $event_id;
-        $data->user_id = $user_id;
+        if(is_object($event_id)) {
+            $data = $event_id;
+        } else {
+            $data = new StdClass;
+            $data->event_id = $event_id;
+            $data->user_id = $user_id;
+        }
+        
         $data->insert_time = date('Y-m-d H:i:s', mktime());
 
         return $this->db->insert('rsvps', $data);
+    }
+
+    function rsvp_out($event_id, $user_id)
+    {
+        return $this->db->delete('rsvps', array('event_id' => $event_id, 'user_id'=>$user_id));
     }
 
     function check_in($event_id, $user_id) {

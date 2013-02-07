@@ -110,8 +110,9 @@ CREATE TABLE `rsvps` (
   `event_id` int(11) unsigned DEFAULT NULL,
   `user_id` int(11) unsigned DEFAULT NULL,
   `is_private` enum('yes','no') DEFAULT 'no',
-  `private_profile` varchar(128) DEFAULT NULL,
   `private_name` varchar(64) DEFAULT NULL,
+  `contact` varchar(32) DEFAULT NULL,
+  `message` text,
   `insert_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `event_id` (`event_id`,`user_id`)
