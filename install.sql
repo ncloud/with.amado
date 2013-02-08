@@ -10,20 +10,22 @@ CREATE TABLE `events` (
   `url` varchar(64) DEFAULT NULL,
   `opt_enable_private_join` enum('yes','no') DEFAULT 'yes',
   `opt_add_input_contact` enum('yes','no') DEFAULT 'no',
-  `rsvp_now` int(11) unsigned DEFAULT 0,
-  `rsvp_max` int(11) unsigned DEFAULT 0,
+  `rsvp_now` int(11) unsigned DEFAULT '0',
+  `rsvp_max` int(11) unsigned DEFAULT '0',
   `rsvp_button_text` varchar(32) DEFAULT NULL,
   `rsvp_before_text` text,
   `rsvp_after_text` text,
   `rsvp_start_time` datetime DEFAULT NULL,
+  `rsvp_set_start_time` enum('yes','no') DEFAULT 'no',
   `rsvp_end_time` datetime DEFAULT NULL,
+  `rsvp_set_end_time` enum('yes','no') DEFAULT 'no',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `start_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `URL` (`url`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  UNIQUE KEY `site_id` (`site_id`,`url`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `role_users` (

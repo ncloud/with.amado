@@ -1,12 +1,14 @@
 
 	<?php
+		$mode = isset($mode) ? $mode : 'create';
 		$default_view_rsvp_end = isset($defaults['set_rsvp_end']) && $defaults['set_rsvp_end'] == 'true';
-		$default_view_adv_option = false;
+		$default_view_adv_option = isset($defaults['set_view_adv_option']) && $defaults['set_view_adv_option'] == 'true';
 	?>
 
 	<div class="grid contents_wrap create_wrap<?php echo $default_view_rsvp_end ? ' visible_more_date_wrap' : '';?><?php echo $default_view_adv_option ? ' visible_adv_option_wrap' : '';?>">
-		<form method="POST" onsubmit="return create_event();">
+		<form method="POST">
 			<input type="hidden" name="set_rsvp_end" value="<?php echo isset($defaults['set_rsvp_end']) ? $defaults['set_rsvp_end'] : 'false';?>" />
+			<input type="hidden" name="set_view_adv_option" value="<?php echo isset($defaults['set_view_adv_option']) ? $defaults['set_view_adv_option'] : 'false';?>" />
 
 			<h3 class="main_title">모임 만들기</h3>
 			<section class="input_group">
@@ -22,13 +24,14 @@
 					?>
 				</section>
 			</section>
-			<section class="input_group date_wrap">
-				<section class="title">모임날짜 <span class="required">*</span></section>
+			<section class="input_group date_wrap<?php echo isset($defaults['rsvp_start_time']) && !empty($defaults['rsvp_start_time']) ? ' is_set_time' : '';?>">
+				<section class="title">날짜 <span class="required">*</span></section>
 				<section class="input">			
 					<?php $default_date = isset($defaults['rsvp_start_date']) ? $defaults['rsvp_start_date'] : date('Y-m-d', mktime());?>
 
 					<input type="text" name="rsvp_start_date" class="date" value="<?php echo $default_date;?>" data-value="<?php echo $default_date;?>" required="required" />
 					<input type="text" name="rsvp_start_time" class="time" value="<?php echo isset($defaults['rsvp_start_time']) ? $defaults['rsvp_start_time'] : '';?>" placeholder="시간 지정" />
+					<a class="cancel" href="#" onclick="resetTime(this); return false;">시간지정 취소</a>
 
 					<?php
 						if(isset($errors['rsvp_start_date']) && !empty($errors['rsvp_start_date'])) {
@@ -39,17 +42,21 @@
 					?>
 
 					<div class="sub_input">
-						<a id="more_date_button" href="#" onclick="toggle_date_option(); return false;"><?php echo $default_view_rsvp_end ? '날짜 옵션 감추기' : '날짜 옵션 더보기';?></a>
+						<a id="more_date_button" href="#" onclick="toggle_date_option(); return false;"><?php echo $default_view_rsvp_end ? '종료날짜 취소' : '종료날짜 지정';?></a>
 					</div>
 				</section>
 			</section>
-			<section class="input_group more_date_wrap_option">
+			<section class="input_group date_wrap more_date_wrap_option<?php echo isset($defaults['rsvp_end_time']) && !empty($defaults['rsvp_end_time']) ? ' is_set_time' : '';?>">
 				<section class="title">종료 <span class="required">*</span></section>
 				<section class="input">
-					<?php $default_date = isset($defaults['rsvp_end_date']) ? $defaults['rsvp_end_date'] : date('Y-m-d', mktime() + ( 60*60*24 ));?>
+					<?php 
+						$check_time = isset($defaults['rsvp_start_date']) ? strtotime($defaults['rsvp_start_date']) : mktime();
+						$default_date = isset($defaults['rsvp_end_date']) ? $defaults['rsvp_end_date'] : date('Y-m-d', $check_time + ( 60*60*24 ));
+					?>
 
 					<input type="text" name="rsvp_end_date" class="date" value="<?php echo $default_date;?>" data-value="<?php echo $default_date;?>" />
 					<input type="text" name="rsvp_end_time" class="time" value="<?php echo isset($defaults['rsvp_end_time']) ? $defaults['rsvp_end_time'] : '';?>" placeholder="시간 지정" />
+					<a class="cancel" href="#" onclick="resetTime(this); return false;">시간지정 취소</a>
 
 					<?php
 						if(isset($errors['rsvp_end_date']) && !empty($errors['rsvp_end_date'])) {
@@ -90,7 +97,7 @@
 					</ol>
 
 					<div class="sub_input">
-						<a id="adv_option_button" href="#" onclick="toggle_adv_option(); return false;"><?php echo $default_view_adv_option ? '고급 옵션 감추기' : '고급 옵션 보기';?></a>
+						<a id="adv_option_button" href="#" onclick="toggle_adv_option(); return false;"><?php echo $default_view_adv_option ? '추가 옵션 감추기' : '추가 옵션 보기';?></a>
 					</div>
 				</section>
 			</section>
@@ -110,8 +117,8 @@
 			</section>
 			<section class="input_group">
 				<section class="input">
-					<button class="green"><span class="label">만들기</span></button>
-					<a class="cancel" href="<?php echo site_url('/');?>" onclick="return confirm('만들기를 취소하시겠습니까?');">취소</a>
+					<button class="green"><span class="label"><?php echo $mode == 'create' ? '만들기' : '편집';?></span></button>
+					<a class="cancel" href="<?php echo isset($permalink) ? $permalink : site_url('/');?>" onclick="return confirm('<?php echo $mode == 'create' ? '만들기를 취소하시겠습니까?' : '편집을 취소하시겠습니까?';?>');">취소</a>
 				</section>
 			</section>
 		</form>
@@ -127,17 +134,32 @@
 		    $('.time').mobiscroll().time({
 		        theme: 'android-ics light',
 		        display: 'modal',
-		        mode: 'scroller'
+		        mode: 'scroller',
+		        onSelect: function() {
+		        	viewTime(this);
+		    	}
 		    }); 
 		});
+
+		function viewTime(obj)
+		{
+			var $this = $(obj);
+			$this.parents('.input_group').addClass('is_set_time');
+		}
+
+		function resetTime(obj)
+		{
+			var $this = $(obj);
+			$this.parents('.input_group').removeClass('is_set_time').find('input.time').val('');
+		}
 
 	    function toggle_date_option() 
 	    {
 	    	if($(".create_wrap").toggleClass('visible_more_date_wrap').hasClass('visible_more_date_wrap')) {
-	    		$("#more_date_button").text('날짜 옵션 감추기');
+	    		$("#more_date_button").text('종료날짜 취소');
 	    		$("input[name=set_rsvp_end]").val('true');
 	    	} else {
-	    		$("#more_date_button").text('날짜 옵션 더보기');
+	    		$("#more_date_button").text('종료날짜 지정');
 	    		$("input[name=set_rsvp_end]").val('false');
 	    	}
 	    }
@@ -145,15 +167,12 @@
 	    function toggle_adv_option()
 	    {
 	    	if($(".create_wrap").toggleClass('visible_adv_option_wrap').hasClass('visible_adv_option_wrap')) {
-	    		$("#adv_option_button").text('고급 옵션 감추기');
+	    		$("#adv_option_button").text('추가 옵션 감추기');
+	    		$("input[name=set_view_adv_option]").val('true');
 	    	} else {
-	    		$("#adv_option_button").text('고급 옵션 보기');
+	    		$("#adv_option_button").text('추가 옵션 보기');
+	    		$("input[name=set_view_adv_option]").val('false');
 	    	}
 
-	    }
-
-	    function create_event()
-	    {
-	    	return true;
 	    }
 	</script>

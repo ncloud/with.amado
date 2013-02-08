@@ -3,7 +3,6 @@
 	idea - http://www.humanized.com/weblog/2006/09/11/monolog_boxes_and_transparent_messages
 	home - http://humanmsg.googlecode.com
 */
-
 var humanMsg = {
 	setup: function(appendTo, msgOpacity) {
 		humanMsg.msgID = 'humanMsg';
@@ -35,9 +34,9 @@ var humanMsg = {
 		// Inject message
 		var $obj = jQuery('#'+humanMsg.msgID);
 		$obj.find('p').html(msg).removeClass().addClass(className);
-		$obj.css('top', (0-$obj.height())+'px');
+		$obj.css('bottom', (0-$obj.height())+'px');
 		
-		var opts = {top:'0px'};//{opacity: humanMsg.msgOpacity};
+		var opts = {bottom:'0px'};//{opacity: humanMsg.msgOpacity};
 		
 		if(pos == 'center') {
 			$obj.removeClass('top').addClass('center');

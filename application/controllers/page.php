@@ -13,6 +13,7 @@ class Page extends APP_Controller {
                             APPPATH . 'webroot/css/lib/reset.css',
                             APPPATH . 'webroot/css/plugin/pickadate.css',
                             APPPATH . 'webroot/css/plugin/datetime.css',                            
+                            APPPATH . 'webroot/css/plugin/humanmsg.css',                            
                             APPPATH . 'webroot/css/plugin/tipsy.css',                            
                             APPPATH . 'webroot/css/lib/ui.css',
                             APPPATH . 'webroot/css/lib/layout.css');
@@ -26,6 +27,7 @@ class Page extends APP_Controller {
             $files = array( APPPATH . 'webroot/js/lib/basic.js',
                             APPPATH . 'webroot/js/plugin/pickadate.js',
                             APPPATH . 'webroot/js/plugin/jquery.datetime.js',
+                            APPPATH . 'webroot/js/plugin/jquery.humanmsg.js',
                             APPPATH . 'webroot/js/plugin/jquery.textchange.js',
                             APPPATH . 'webroot/js/plugin/jquery.tipsy.js',
                             APPPATH . 'webroot/js/lib/user.js',
@@ -120,7 +122,10 @@ class Page extends APP_Controller {
             $data = $this->__create($_POST, $errors);
             if($data) {
                 if($event_id = $this->m_event->create($data)) {
-                    $data->id = $event_id;
+                    $data->id = $event_id;                        
+
+                    $this->load->model('m_history');
+                    $this->m_history->add($event_id, $this->user_data->id, 'EVENT_CREATE', array('%1님이 "%2" 이벤트를 만들었습니다.', array($this->user_data->id, $event_id)));
 
                     $this->__auto_redirect($data);
                 }
@@ -146,16 +151,7 @@ class Page extends APP_Controller {
         }
 
         if($event) {
-            $now = mktime();
-
-            $event->rsvp_percent = round($event->rsvp_now / $event->rsvp_max * 100);
-            $event->description = trim(Markdown($event->description));
-
-            if(strtotime($event->rsvp_start_time) <= $now) {
-                $event->is_end = true;
-            } else {
-                $event->is_end = false;
-            }
+            $event = $this->__default($event);
 
             $this->set('event', $event);
 
@@ -178,6 +174,28 @@ class Page extends APP_Controller {
         }
     }
 
+    public function event_rsvp($id)
+    {
+        if(!$this->user_data->id) redirect('/');
+
+        $this->load->model('m_event');
+        $this->load->model('m_history');
+        
+        $event = $this->m_event->get($id);
+        if($event && $event->user_id == $this->user_data->id) {   
+            $event = $this->__default($event);
+
+            $this->set('event', $event);
+
+            $rsvp_users = $this->m_event->gets_rsvp($event->id);
+            $this->set('rsvp_users', $rsvp_users);
+
+            $this->view('page/event_rsvp');
+        } else {
+            redirect('/');
+        }
+    }
+
     public function event_in($id)
     {
         if(!$this->user_data->id) redirect('/');
@@ -187,7 +205,7 @@ class Page extends APP_Controller {
 
         $event = $this->m_event->get($id);
         if($event) {
-            if($_POST) {
+            if($_POST && !empty($_POST)) {
                 if($this->m_event->check_in($id, $this->user_data->id)) { // 이미 참석함
                     $this->__auto_redirect($event);
                 } else if($event->rsvp_max == $event->rsvp_now) { // 정원이 가득참
@@ -255,7 +273,80 @@ class Page extends APP_Controller {
         } else {
             redirect('/');
         }
+    }
 
+    public function event_edit($id)
+    {
+        if(!$this->user_data->id) redirect('/');
+
+        $this->load->model('m_event');
+        $this->load->model('m_history');
+
+        $now = mktime();
+
+        $event = $this->m_event->get($id);
+        if($event && $event->user_id == $this->user_data->id && strtotime($event->rsvp_start_time) > $now) {
+            $errors = array();
+            if($_POST && !empty($_POST)) {
+                $_POST['rsvp_now'] = $event->rsvp_now;
+                $data = $this->__create($_POST, $errors, false);
+
+                foreach((array)$data as $key=>$value) {
+                    $event->{$key} = $value;
+                }     
+
+                if(empty($errors)) {
+                    $this->m_event->update($event->id, $data);              
+
+                    $this->load->model('m_history');
+                    $this->m_history->add($event->id, $this->user_data->id, 'EVENT_CREATE', array('%1님이 "%2" 이벤트를 수정했습니다.', array($this->user_data->id, $event->id)));
+
+                    $this->__auto_redirect($event);
+                }
+                
+            }
+
+            $defaults = array();
+            $defaults['set_rsvp_end'] = !empty($event->rsvp_end_time) && $event->rsvp_end_time != '0000-00 00:00:00';
+
+            $defaults['title'] = $event->title;
+
+            $start_date = strtotime($event->rsvp_start_time);
+            $defaults['rsvp_start_date'] = date('Y-m-d', $start_date);
+            if($event->rsvp_set_start_time == 'yes')
+                $defaults['rsvp_start_time'] = date('h:i A', $start_date);
+
+            if($defaults['set_rsvp_end']) {
+                $end_date = strtotime($event->rsvp_end_time);
+                $defaults['rsvp_end_date'] = date('Y-m-d', $end_date);
+                if($event->rsvp_set_end_time == 'yes')
+                    $defaults['rsvp_end_time'] = date('h:i A', $end_date);
+            }
+
+            $defaults['rsvp_max'] = $event->rsvp_max;
+
+            $defaults['description'] = $event->description;
+
+            $defaults['opt_enable_private_join'] = $event->opt_enable_private_join == 'yes' ? 'on' : 'off';
+            $defaults['opt_add_input_contact'] = $event->opt_add_input_contact == 'yes' ? 'on' : 'off';
+
+            $defaults['url'] = $event->url;
+
+            $this->set('mode','edit');
+            $this->set('defaults', $defaults);
+            $this->set('errors', $errors);
+
+            if(!empty($event->url)) {
+                $permalink = site_url('/',$event->url);
+            } else {
+                $permalink = site_url('/'.$event->id);
+            }
+            $this->set('permalink', $permalink);
+
+            $this->view('page/create');
+        } else {
+            redirect('/');
+        }
     }
 
     private function __in($event, $form, &$errors)
@@ -298,7 +389,7 @@ class Page extends APP_Controller {
         return $data;
     }
 
-    private function __create($form, &$errors)
+    private function __create($form, &$errors, $return_false = true)
     {
         $data = new StdClass;
 
@@ -306,8 +397,9 @@ class Page extends APP_Controller {
         // 제목
         if(!isset($form['title']) || empty($form['title'])) {
            $errors['title'] = '제목을 입력해주세요.';
-           return false;
-        } else { $data->title = $form['title']; }
+           if($return_false) return false;
+        } 
+        $data->title = $form['title'];
 
         $min = date('Y-m-d', mktime());
         $min_full = date('Y-m-d H:i:s', mktime());
@@ -315,45 +407,49 @@ class Page extends APP_Controller {
          // 모임날짜
         if(!isset($form['rsvp_start_date']) || empty($form['rsvp_start_date'])) {
            $errors['rsvp_start_date'] = '날짜가 비어있습니다.';
-           return false;
-        } else { 
-            $rsvp_start_date = $form['rsvp_start_date'];
-            if(strtotime($rsvp_start_date) < strtotime($min)) {
-                $errors['rsvp_start_date'] = '지정한 날짜 [' . $rsvp_start_date . ']에 모임을 만들 수 없습니다.';
-                return false;
+           if($return_false) return false;
+        }
+
+        $rsvp_start_date = $form['rsvp_start_date'];
+        if(strtotime($rsvp_start_date) < strtotime($min)) {
+            $errors['rsvp_start_date'] = '지정한 날짜 [' . $rsvp_start_date . ']에 모임을 만들 수 없습니다.';
+            return false;
+        }
+
+        if(!empty($form['rsvp_start_time'])) {
+            $rsvp_start_time = date('H:i:s', strtotime($form['rsvp_start_time']));
+            if(strtotime($rsvp_start_date . ' ' . $rsvp_start_time) < strtotime($min_full)) {
+            $errors['rsvp_start_date'] = '지정한 날짜 [' . $rsvp_start_date . ' ' . $rsvp_start_time . ']에 모임을 만들 수 없습니다.';
+            return false;
             }
 
-            if(!empty($form['rsvp_start_time'])) {
-                $rsvp_start_time = date('H:i:s', strtotime($form['rsvp_start_time']));
-                if(strtotime($rsvp_start_date . ' ' . $rsvp_start_time) < strtotime($min_full)) {
-                $errors['rsvp_start_date'] = '지정한 날짜 [' . $rsvp_start_date . ' ' . $rsvp_start_time . ']에 모임을 만들 수 없습니다.';
-                return false;
-                }
-
-                $data->rsvp_start_time = $rsvp_start_date . ' ' . $rsvp_start_time;
-            } else {
-                $data->rsvp_start_time = $rsvp_start_date . ' ' . '00:00:00';
-            }
-        }       
+            $data->rsvp_start_time = $rsvp_start_date . ' ' . $rsvp_start_time;
+            $data->rsvp_set_start_time = 'yes';
+        } else {
+            $data->rsvp_start_time = $rsvp_start_date . ' ' . '00:00:00';
+            $data->rsvp_set_start_time = 'no';
+        }     
 
         // 모임 종료 날짜
-        if(!isset($form['set_rsvp_end']) && $form['set_rsvp_end'] = 'true' && isset($form['rsvp_end_date']) && !empty($form['rsvp_end_date'])) {
-            $rsvp_end_date = $form['rsvp_start_date'];
+        if(isset($form['set_rsvp_end']) && $form['set_rsvp_end'] == 'true' && isset($form['rsvp_end_date']) && !empty($form['rsvp_end_date'])) {
+            $rsvp_end_date = $form['rsvp_end_date'];
             if(strtotime($rsvp_end_date) < strtotime($rsvp_start_date)) {
-                $errors['rsvp_end_date'] = '지정한 종료 날짜 [' . $rsvp_end_date . ']에 모임을 만들 수 없습니다.';
-                return false;
+                $errors['rsvp_end_date'] = '종료 날짜는 시작 날짜 이후여야 합니다.';
+                if($return_false) return false;
             }
 
-            if(!empty($form['rsvp_end_date'])) {
-                $rsvp_end_date = $form['rsvp_end_date'];
-                if(strtotime($rsvp_end_date . ' ' . $rsvp_end_date) < strtotime($$data->rsvp_start_time)) {
-                $errors['rsvp_end_date'] = '지정한 종료 날짜 [' . $rsvp_end_date . ' ' . $rsvp_end_time . ']에 모임을 만들 수 없습니다.';
-                return false;
+            if(!empty($form['rsvp_end_time'])) {
+                $rsvp_end_time = $form['rsvp_end_time'];
+                if(strtotime($rsvp_end_date . ' ' . $rsvp_end_time) < strtotime($data->rsvp_start_time)) {
+                    $errors['rsvp_end_date'] = '지정한 종료 날짜 [' . $rsvp_end_date . ' ' . $rsvp_end_time . ']에 모임을 만들 수 없습니다.';
+                    if($return_false) return false;
                 }
 
                 $data->rsvp_end_time = $rsvp_end_date . ' ' . $rsvp_end_time;
+                $data->rsvp_set_end_time = 'yes';
             } else {
                 $data->rsvp_end_time = $rsvp_end_date . ' ' . '00:00:00';
+                $data->rsvp_set_end_time = 'no';
             }
         }
 
@@ -361,25 +457,30 @@ class Page extends APP_Controller {
         // 정원
         if(!isset($form['rsvp_max']) || empty($form['rsvp_max'])) {
            $errors['rsvp_max'] = '정원이 비어있습니다.';
-           return false;
-        } else { 
-            $data->rsvp_max = $form['rsvp_max'];
-            if(!is_numeric($data->rsvp_max)) {
-                $errors['rsvp_max'] = '정원값은 숫자여야 합니다.';
-                return false;
-            }
+           if($return_false) return false;
+        }
 
-            if(!($data->rsvp_max > 0 && $data->rsvp_max <= 10)) {
-                $errors['rsvp_max'] = '정원은 범위는 1~10명까지입니다.';
-                return false;
+        $data->rsvp_max = $form['rsvp_max'];
+        if(!is_numeric($data->rsvp_max)) {
+            $errors['rsvp_max'] = '정원값은 숫자여야 합니다.';
+            if($return_false) return false;
+        }
+
+        if(!($data->rsvp_max > 0 && $data->rsvp_max <= 10)) {
+            $errors['rsvp_max'] = '정원은 범위는 1~10명까지입니다.';
+            if($return_false) return false;
+        }
+
+        if(isset($form['rsvp_now'])) {
+            if($form['rsvp_now'] > $form['rsvp_max']) {
+                $errors['rsvp_max'] = '정원이 현재 모집된 인원 ' . $form['rsvp_now'] . '명 보다 작아질 수 없습니다.';
+                if($return_false) return false;
             }
         }
 
         /// ---- 기본 ----
         $data->site_id = $this->site->id;
         $data->user_id = $this->user_data->id;
-
-        $data->create_time = date('Y-m-d H:i:s', mktime());
 
         /// ---- 선택 ----
         $data->description = isset($form['description']) ? $form['description'] : '';
@@ -390,25 +491,25 @@ class Page extends APP_Controller {
 
             if(is_numeric($url)) {
                 $errors['url'] = '주소는 숫자만으로 이루어질 수 없습니다.';
-                return false;
+                if($return_false) return false;
             }
 
-            if(strlen($url) <= 5) {
+            if(empty($errors['url']) && strlen($url) <= 5) {
                 $errors['url'] = '주소는 최소 6자 이상이 되어야 합니다.';
-                return false;
+                if($return_false) return false;
             }
 
-            if(in_array($url, array('join','signin','signout','login','logout','admin','owner','official','create','delete','welcome','search','find'))) {
+            if(empty($errors['url']) && in_array($url, array('join','signin','signout','login','logout','admin','owner','official','create','delete','welcome','search','find'))) {
                 $errors['url'] = '사용하실 수 없는 주소입니다.';
-                return false;
+                if($return_false) return false;
             }
 
-            if(preg_match('/([a-zA-Z0-9\.]+)/', $url, $matches)) {
+            if(empty($errors['url']) && preg_match('/([a-zA-Z0-9\.]+)/', $url, $matches)) {
                 $check_url = $matches[0];
 
                 if(strcmp($check_url,$url) != 0) {
                     $errors['url'] = '주소는 알파벳과 숫자 그리고 점(.)만으로 이루어져야 합니다.';
-                    return false;
+                    if($return_false) return false;
                 }
             }
 
@@ -416,7 +517,7 @@ class Page extends APP_Controller {
                 $data->url = $url;
             } else {
                 $errors['url'] = '이미 사용중인 주소입니다.';
-                return false;
+                if($return_false) return false;
             }
         }
 
@@ -429,6 +530,21 @@ class Page extends APP_Controller {
         }
 
         redirect('/' . $event->id);
+    }
+
+    private function __default($event) {
+        require_once(APPPATH . '/vendors/markdown' . EXT);
+
+        $event->rsvp_percent = round($event->rsvp_now / $event->rsvp_max * 100);
+        $event->description = trim(Markdown($event->description));
+
+        if(strtotime($event->rsvp_start_time) <= mktime()) {
+            $event->is_end = true;
+        } else {
+            $event->is_end = false;
+        }
+
+        return $event;
     }
 }
 ?>

@@ -51,15 +51,24 @@ class m_event extends CI_Model
         else
             $this->db->where_in('rsvps.event_id', $event_id);
 
-        return $this->db->get()->result();
+        return $this->db->order_by('rsvps.insert_time DESC')->get()->result();
     }
 
     function create($data) {
+        $data->create_time = date('Y-m-d H:i:s', mktime());
+
     	if($this->db->insert('events', $data)) {
     		return $this->db->insert_id();
     	}
 
     	return false;
+    }
+
+    function update($event_id, $data) {
+        $data->update_time = date('Y-m-d H:i:s', mktime());
+
+        $this->db->where('id', $event_id);
+        return $this->db->update('events', $data);
     }
 
     function rsvp_in($event_id, $user_id = null)

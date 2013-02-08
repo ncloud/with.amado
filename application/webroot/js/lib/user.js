@@ -34,6 +34,10 @@ var User = function() {
 		  /*	if (response.scope == null) {
 		     	FB.logout();
 		    } else {*/
+		    	if(typeof(humanMsg) != 'undefined') {
+		    		humanMsg.displayMsg('로그인중입니다. 잠시만 기다려주세요.');
+		    	}
+
 				window.location = service.url + 'login/facebook/?redirect_uri=' + encodeURIComponent(redirect_uri);
 		  //  }
 		  } else {
