@@ -37,6 +37,10 @@
               window.location = service.url + 'unsupport_browser';
           }
        }
+
+       $(function() {
+            $('.tip').tipsy();
+       });
     </script>
 
     <?php echo $styles_for_layout;?>

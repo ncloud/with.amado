@@ -104,11 +104,11 @@
 							<?php
 								if($rsvp->is_private == 'yes') {
 							?>
-							<div class="private_profile"><?php echo mb_substr($rsvp->private_name,0,1);?></div>
+							<div class="private_profile tip" title="<?php echo $rsvp->user_name;?>"><?php echo mb_substr($rsvp->user_name,0,1);?></div>
 							<?php
 								} else {
 							?>
-							<img src="<?php echo $rsvp->profile;?>" alt="" />
+							<img class="tip" title="<?php echo $rsvp->user_name;?>" src="<?php echo $rsvp->profile;?>" alt="" />
 							<?php
 								}
 							?>

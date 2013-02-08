@@ -13,6 +13,7 @@ class Page extends APP_Controller {
                             APPPATH . 'webroot/css/lib/reset.css',
                             APPPATH . 'webroot/css/plugin/pickadate.css',
                             APPPATH . 'webroot/css/plugin/datetime.css',                            
+                            APPPATH . 'webroot/css/plugin/tipsy.css',                            
                             APPPATH . 'webroot/css/lib/ui.css',
                             APPPATH . 'webroot/css/lib/layout.css');
             $min_contents = $this->minify->combine_files($files, 'css', $this->debug ? false : true);
@@ -26,6 +27,7 @@ class Page extends APP_Controller {
                             APPPATH . 'webroot/js/plugin/pickadate.js',
                             APPPATH . 'webroot/js/plugin/jquery.datetime.js',
                             APPPATH . 'webroot/js/plugin/jquery.textchange.js',
+                            APPPATH . 'webroot/js/plugin/jquery.tipsy.js',
                             APPPATH . 'webroot/js/lib/user.js',
                             APPPATH . 'webroot/js/lib/less.js');
                           
@@ -238,13 +240,14 @@ class Page extends APP_Controller {
         if($event->opt_enable_private_join=='yes') {
             if((isset($form['enable_private_join']) && $form['enable_private_join'] == 'on') && (isset($form['private_name']) && !empty($form['private_name']))) {
                 $data->is_private = 'yes';
-                $data->private_name = $form['private_name']; 
+                $data->user_name = $form['private_name']; 
             } else {
                 $errors['private_name'] = '익명을 입력해주세요.';
                 return false;
             }
         } else {
             $data->is_private = 'no';
+            $data->user_name = $this->user_data->display_name;
         }
 
         /// ---- 기본 ----
