@@ -39,6 +39,37 @@ class Page extends APP_Controller {
     public function index()
     {
         if($this->user_data->id) {
+            $this->load->model('m_event');
+
+            $event_ids = array();
+
+            $events_by_me = $this->m_event->gets_by_me($this->site->id, $this->user_data->id);
+            if($events_by_me) foreach($events_by_me as $event) $event_ids[$event->id] = $event->id;
+
+            $events_to_me = $this->m_event->gets_to_me($this->site->id, $this->user_data->id);
+            if($events_to_me) foreach($events_to_me as $event) $event_ids[$event->id] = $event->id;
+
+            $rsvp_users = array();
+            $rsvp_user_ids = array();
+
+            $result = $this->m_event->gets_rsvp(array_keys($event_ids));
+            if($result) {
+                foreach($result as $item) {
+                    if(!isset($rsvp_users[$item->event_id])) {
+                        $rsvp_users[$item->event_id] = array();
+                        $rsvp_user_ids[$item->event_id] = array();
+                    }
+                    $rsvp_users[$item->event_id][] = $item;
+                    $rsvp_user_ids[$item->event_id][] = $item->user_id;
+                }
+            }
+
+            $this->set('rsvp_users', $rsvp_users);
+            $this->set('rsvp_user_ids', $rsvp_user_ids);
+
+            $this->set('events_by_me', $events_by_me);
+            $this->set('events_to_me', $events_to_me);
+
             $this->view('dashboard');
         } else {
            $this->view('index');
@@ -189,9 +220,13 @@ class Page extends APP_Controller {
                 } 
 
                 $this->set('event', $event);
-                $this->set('error_message', $error_message);
 
-                $this->view('page/event_in');
+                if(empty($error_message)) {
+                    $this->view('page/event_in');
+                } else {
+                    $this->set('error_message', $error_message);
+                    $this->view('page/error');
+                }
             }
         } else {
             redirect('/');
@@ -238,12 +273,14 @@ class Page extends APP_Controller {
 
         // private_name
         if($event->opt_enable_private_join=='yes') {
-            if((isset($form['enable_private_join']) && $form['enable_private_join'] == 'on') && (isset($form['private_name']) && !empty($form['private_name']))) {
-                $data->is_private = 'yes';
-                $data->user_name = $form['private_name']; 
-            } else {
-                $errors['private_name'] = '익명을 입력해주세요.';
-                return false;
+            if((isset($form['enable_private_join']) && $form['enable_private_join'] == 'on')) {
+                if((isset($form['private_name']) && !empty($form['private_name']))) {
+                    $data->is_private = 'yes';
+                    $data->user_name = $form['private_name']; 
+                } else {
+                    $errors['private_name'] = '익명을 입력해주세요.';
+                    return false;
+                }
             }
         } else {
             $data->is_private = 'no';
@@ -280,7 +317,6 @@ class Page extends APP_Controller {
            $errors['rsvp_start_date'] = '날짜가 비어있습니다.';
            return false;
         } else { 
-
             $rsvp_start_date = $form['rsvp_start_date'];
             if(strtotime($rsvp_start_date) < strtotime($min)) {
                 $errors['rsvp_start_date'] = '지정한 날짜 [' . $rsvp_start_date . ']에 모임을 만들 수 없습니다.';
@@ -288,7 +324,7 @@ class Page extends APP_Controller {
             }
 
             if(!empty($form['rsvp_start_time'])) {
-                $rsvp_start_time = $form['rsvp_start_time'];
+                $rsvp_start_time = date('H:i:s', strtotime($form['rsvp_start_time']));
                 if(strtotime($rsvp_start_date . ' ' . $rsvp_start_time) < strtotime($min_full)) {
                 $errors['rsvp_start_date'] = '지정한 날짜 [' . $rsvp_start_date . ' ' . $rsvp_start_time . ']에 모임을 만들 수 없습니다.';
                 return false;

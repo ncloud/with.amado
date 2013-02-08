@@ -4,7 +4,7 @@
 			<div class="title_wrap">
 				<h3><?php echo $event->title;?></h3>
 				<div class="status_wrap">
-					<span class="percent">현재 <strong><?php echo $event->rsvp_percent;?>%</strong> 모집</span>
+					<span class="percent">현재 <strong class="tip" title="<?php echo '전체 ' . $event->rsvp_max . '명 중 ' . $event->rsvp_now . '명이 모집되었습니다';?>"><?php echo $event->rsvp_percent;?>%</strong> 모집</span>
 					<span class="remain"><?php echo $this->date->string_from_now_to_remain($event->rsvp_start_time, false, true);?></span>
 				</div>
 
@@ -21,7 +21,7 @@
 					<?php echo $event->description;?>
 				<?php
 					} else {
-						echo '이 이벤트는 설명이 따로 없습니다.<br />';
+						echo '이 모임은 설명이 따로 없습니다.<br />';
 						echo '믿고 신청하실 수 밖에... :)';
 					}
 				?>
@@ -71,7 +71,7 @@
 				<?php 
 					if($event->is_end) {
 				?>
-				이벤트 마감
+					<p class="finish">마감된 모임입니다.</p>
 				<?php
 					} else {
 						if($me_rsvp_in) {
@@ -83,11 +83,24 @@
 					</form>
 				<?php
 						} else {
+							if($event->rsvp_max == $event->rsvp_now) {
+				?>
+					<p class="finish">정원이 가득 찼습니다.</p>
+				<?php
+							} else {
+
+								if($current_user->id) {
 				?>
 				<form style="display: inline" action="<?php echo site_url('/event/in/' . $event->id);?>" method="get">
 					<button class="green"><span class="label">참석하기</button>
 				</form>
 				<?php
+								} else {
+				?>
+					<p class="please_login">로그인이 필요합니다.</p>
+				<?php
+								}
+							}
 						}
 					}
 				?>
@@ -104,7 +117,7 @@
 							<?php
 								if($rsvp->is_private == 'yes') {
 							?>
-							<div class="private_profile tip" title="<?php echo $rsvp->user_name;?>"><?php echo mb_substr($rsvp->user_name,0,1);?></div>
+							<div class="private_profile tip" title="익명 : <?php echo $rsvp->user_name;?>"><?php echo mb_substr($rsvp->user_name,0,1);?></div>
 							<?php
 								} else {
 							?>

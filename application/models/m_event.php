@@ -17,8 +17,18 @@ class m_event extends CI_Model
     }
 
     function get_by_url($site_id, $url)
+    {        
+        return $this->db->from('events')->join('users','users.id = events.user_id')->where('events.site_id',$site_id)->where('events.url', $url)->select('events.*, users.profile as user_profile, users.display_name as user_display_name')->get()->row();        
+    }
+
+    function gets_by_me($site_id, $user_id)
     {
-        return $this->db->from('events')->where('site_id',$site_id)->where('url', $url)->get()->row();
+        return $this->db->from('events')->where('events.site_id', $site_id)->where('events.user_id', $user_id)->order_by('events.create_time DESC')->select('events.*')->get()->result();
+    }
+
+    function gets_to_me($site_id, $user_id)
+    {
+        return $this->db->from('events')->join('rsvps','rsvps.event_id = events.id')->join('users','users.id = events.user_id')->where('events.site_id', $site_id)->where('rsvps.user_id', $user_id)->order_by('events.create_time DESC')->select('events.*, users.profile as user_profile, users.display_name as user_display_name')->get()->result();
     }
 
     function check_url_exists($site_id, $url)
@@ -32,7 +42,16 @@ class m_event extends CI_Model
 
     function gets_rsvp($event_id)
     {
-        return $this->db->from('rsvps')->join('users', 'users.id = rsvps.user_id')->where('rsvps.event_id',$event_id)->select('rsvps.*, users.profile, users.username, users.display_name')->get()->result();
+        if(empty($event_id)) return false;
+
+        $this->db->from('rsvps')->join('users', 'users.id = rsvps.user_id')->select('rsvps.*, users.profile, users.username');
+
+        if(!is_array($event_id))
+            $this->db->where('rsvps.event_id',$event_id);
+        else
+            $this->db->where_in('rsvps.event_id', $event_id);
+
+        return $this->db->get()->result();
     }
 
     function create($data) {
