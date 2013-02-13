@@ -15,6 +15,7 @@ class Page extends APP_Controller {
                             APPPATH . 'webroot/css/plugin/datetime.css',                            
                             APPPATH . 'webroot/css/plugin/humanmsg.css',                            
                             APPPATH . 'webroot/css/plugin/tipsy.css',                            
+                            APPPATH . 'webroot/css/plugin/facebox.css',                            
                             APPPATH . 'webroot/css/lib/ui.css',
                             APPPATH . 'webroot/css/lib/layout.css');
             $min_contents = $this->minify->combine_files($files, 'css', $this->debug ? false : true);
@@ -30,6 +31,7 @@ class Page extends APP_Controller {
                             APPPATH . 'webroot/js/plugin/jquery.humanmsg.js',
                             APPPATH . 'webroot/js/plugin/jquery.textchange.js',
                             APPPATH . 'webroot/js/plugin/jquery.tipsy.js',
+                            APPPATH . 'webroot/js/plugin/jquery.facebox.js',
                             APPPATH . 'webroot/js/lib/user.js',
                             APPPATH . 'webroot/js/lib/less.js');
                           
@@ -152,7 +154,6 @@ class Page extends APP_Controller {
 
         if($event) {
             $event = $this->__default($event);
-
             $this->set('event', $event);
 
             $rsvps =$this->m_event->gets_rsvp($event->id);
@@ -167,7 +168,7 @@ class Page extends APP_Controller {
             }
             $this->set('me_rsvp_in',$me_rsvp_in);
 
-            $this->view('page/view');
+            $this->view('page/event_view');
         } else {
             // wrong event
             redirect('/');
@@ -323,6 +324,7 @@ class Page extends APP_Controller {
                     $defaults['rsvp_end_time'] = date('h:i A', $end_date);
             }
 
+            $defaults['rsvp_now'] = $event->rsvp_now;
             $defaults['rsvp_max'] = $event->rsvp_max;
 
             $defaults['description'] = $event->description;
@@ -534,6 +536,12 @@ class Page extends APP_Controller {
 
     private function __default($event) {
         require_once(APPPATH . '/vendors/markdown' . EXT);
+
+        if(!empty($event->url)) {
+            $event->permalink = site_url('/',$event->url);
+        } else {
+            $event->permalink = site_url('/'.$event->id);
+        }
 
         $event->rsvp_percent = round($event->rsvp_now / $event->rsvp_max * 100);
         $event->description = trim(Markdown($event->description));

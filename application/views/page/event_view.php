@@ -2,7 +2,7 @@
 	<div class="grid contents_wrap view_wrap">
 		<div class="row">
 			<div class="event_title_wrap">
-				<h3><?php echo $event->title;?></h3>
+				<h3><a href="<?php echo $event->permalink;?>"><?php echo $event->title;?></a></h3>
 				<div class="status_wrap">
 					<span class="percent">현재 <strong class="tip" title="<?php echo '전체 ' . $event->rsvp_max . '명 중 ' . $event->rsvp_now . '명이 모집되었습니다';?>"><?php echo $event->rsvp_percent;?>%</strong> 모집</span>
 					<span class="remain"><?php echo $this->date->string_from_now_to_remain($event->rsvp_start_time, false, true);?></span>

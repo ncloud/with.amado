@@ -115,14 +115,81 @@
 					?>
 				</section>
 			</section>
-			<section class="input_group">
+			<section class="input_group button_group">
 				<section class="input">
 					<button class="green"><span class="label"><?php echo $mode == 'create' ? '만들기' : '편집';?></span></button>
 					<a class="cancel" href="<?php echo isset($permalink) ? $permalink : site_url('/');?>" onclick="return confirm('<?php echo $mode == 'create' ? '만들기를 취소하시겠습니까?' : '편집을 취소하시겠습니까?';?>');">취소</a>
+
+					<?php
+						if($mode == 'edit') {
+					?>
+					<div class="sub_input">
+						<?php
+							if($defaults['rsvp_now'] > 0) {
+						?>
+						<button class="red" onclick="event_cancel(); return false;"><span class="label">모임 취소</span></button>
+						<?php } else { ?>
+						<button class="red" onclick="event_cancel(); return false;"><span class="label">모임 삭제</span></button>
+						<?php } ?>
+					</div>
+					<?php
+						}
+					?>
 				</section>
 			</section>
 		</form>
 	</div>
+
+
+	<?php
+		if($mode == 'edit') {
+	?>
+
+	<div id="event_cancel_popup" class="is_facebox">
+		<a href="#" class="close">닫기</a>
+		<?php
+			if($defaults['rsvp_now'] == 0) {
+				// 바로삭제
+		?>
+			<h3><span class="remain_sec">3초 후</span> 모임을 삭제하시겠습니까?</h3>
+			<p>
+				아직 아무도 신청하지 않은 이 모임은 삭제하는 순간 DB에서 삭제되며, 다시 복구할 수 없습니다. <br />
+				그래도 삭제하시겠습니까?
+			</p>
+		<?php
+			} else {
+				// 재확인
+		?>
+			<h3><span class="remain_sec">3초 후</span> 모임을 취소하시겠습니까?</h3>
+			<p class="hint">
+				취소한 모임은 DB에서 삭제되지 않고 그대로 남아있습니다. <br />
+				대신 모임 페이지에서 "취소한 모임"임이 표시되며 더이상 참석 신청을 받지 않습니다.
+			</p>
+			<p>
+				이미 <?php echo $defaults['rsvp_now'];?>명이 모임에 참석하기로 했습니다.<br />
+				그래도 모임을 취소하시겠습니까?
+			</p>
+		<?php
+			}
+		?>
+
+		<div class="buttons">
+
+		<?php
+			if($defaults['rsvp_now'] == 0) {
+				// 바로삭제
+		?>
+			<button class="red cancel_button disabled"><span class="label">모임 삭제</span></button>
+		<?php
+			} else { ?>
+			<button class="red cancel_button disabled"><span class="label">모임 취소</span></button>
+		<?php
+			} 
+		?>
+		</div>
+	</div>
+
+	<?php } ?>
 
 	<script type="text/javascript">
 		$(function() {
@@ -175,4 +242,40 @@
 	    	}
 
 	    }
+
+<?php
+	if($mode == 'edit') {
+?>
+		var resetButtonIntervalID = 0;
+		var lastButtonSec = 3;
+
+		function event_cancel() 
+		{
+			if(resetButtonIntervalID) {
+				clearInterval(resetButtonIntervalID);
+				resetButtonIntervalID = 0;
+			}
+			lastButtonSec = 3;
+
+			$(".cancel_button").addClass('disabled');
+			$(".remain_sec").text(lastButtonSec + '초 후');
+			$.facebox({div:'#event_cancel_popup'});
+
+			resetButtonIntervalID = setInterval(function() {
+				if(lastButtonSec == 0) {
+					clearInterval(resetButtonIntervalID);
+					resetButtonIntervalID = 0;				
+
+					$("#facebox .cancel_button").removeClass('disabled');	
+					$("#facebox .remain_sec").text('');
+				} else {
+					$("#facebox .remain_sec").text(lastButtonSec + '초 후');
+				}
+				
+				lastButtonSec -= 1;
+			}, 1000);
+		}
+<?php
+	}
+?>
 	</script>

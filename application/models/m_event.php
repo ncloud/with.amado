@@ -44,7 +44,7 @@ class m_event extends CI_Model
     {
         if(empty($event_id)) return false;
 
-        $this->db->from('rsvps')->join('users', 'users.id = rsvps.user_id')->select('rsvps.*, users.profile, users.username');
+        $this->db->from('rsvps')->join('users', 'users.id = rsvps.user_id')->select('rsvps.*, users.profile, users.username, users.display_name');
 
         if(!is_array($event_id))
             $this->db->where('rsvps.event_id',$event_id);

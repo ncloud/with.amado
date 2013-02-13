@@ -208,6 +208,10 @@ article { line-height:20px; }
 		.visible_more_date_wrap .more_date_wrap_option { display:block; }
 		.visible_adv_option_wrap .adv_wrap_option { display:block; }
 
+		.create_wrap section.button_group {}
+			.create_wrap section.button_group .input .sub_input { top:0; line-height:0; } 
+			.create_wrap section.button_group .input .sub_input button { margin:0; }
+
 .event_in_wrap {}
 	.event_in_wrap .user_group .private_wrap { display:none; }
 	.event_in_wrap.enable_private_join .user_group p.user_name { color:#aaa; }

@@ -1,7 +1,7 @@
 	
 	<div class="grid contents_wrap">
 		<div class="event_title_wrap">
-			<h3><?php echo $event->title;?></h3>
+			<h3><a href="<?php echo $event->permalink;?>"><?php echo $event->title;?></a></h3>
 			<div class="status_wrap">
 				<span class="percent">현재 <strong class="tip" title="<?php echo '전체 ' . $event->rsvp_max . '명 중 ' . $event->rsvp_now . '명이 모집되었습니다';?>"><?php echo $event->rsvp_percent;?>%</strong> 모집</span>
 				<span class="remain"><?php echo $this->date->string_from_now_to_remain($event->rsvp_start_time, false, true);?></span>
@@ -22,7 +22,13 @@
 		<li>
 			<span class="number"><?php echo $index++;?></span>
 			<span class="profile"><img src="<?php echo $user->profile;?>" alt="" /></span>
-			<span class="name"><?php echo $user->user_name;?></span>
+			<span class="name">
+				<?php if($user->is_private == 'yes') { ?>
+					<?php echo $user->display_name;?> <span class="private">(익명신청 : <?php echo $user->user_name;?>)</span>
+				<?php } else { ?>
+					<?php echo $user->user_name;?>
+				<?php } ?>
+			</span>
 			<?php
 				if(!empty($user->contact)) {
 			?>
