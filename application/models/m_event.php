@@ -12,6 +12,41 @@ class m_event extends CI_Model
     }
     //----------------------- PUBLIC METHODS --------------------------//
 
+    function delete($id)
+    {
+        return $this->db->delete('events', array('id'=>$id));
+    }
+
+    function cancel($id)
+    {
+        $data = new StdClass;
+        $data->action = 'cancel';
+        $data->action_time = date('Y-m-d H:i:s', mktime());
+
+        $this->db->where('id', $id);
+        return $this->db->update('events', $data);
+    }
+
+    function finish($id)
+    {
+        $data = new StdClass;
+        $data->action = 'finish';
+        $data->action_time = date('Y-m-d H:i:s', mktime());
+
+        $this->db->where('id', $id);
+        return $this->db->update('events', $data);
+    }
+
+    function pause($id)
+    {
+        $data = new StdClass;
+        $data->action = 'pause';
+        $data->action_time = date('Y-m-d H:i:s', mktime());
+
+        $this->db->where('id', $id);
+        return $this->db->update('events', $data);
+    }
+
     function get($id) {
         return $this->db->from('events')->join('users','users.id = events.user_id')->where('events.id', $id)->select('events.*, users.profile as user_profile, users.display_name as user_display_name')->get()->row();        
     }
@@ -44,7 +79,7 @@ class m_event extends CI_Model
     {
         if(empty($event_id)) return false;
 
-        $this->db->from('rsvps')->join('users', 'users.id = rsvps.user_id')->select('rsvps.*, users.profile, users.username, users.display_name');
+        $this->db->from('rsvps')->join('users', 'users.id = rsvps.user_id')->select('rsvps.*, users.profile, users.username, users.display_name, users.email');
 
         if(!is_array($event_id))
             $this->db->where('rsvps.event_id',$event_id);

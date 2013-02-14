@@ -179,10 +179,14 @@
 			if($defaults['rsvp_now'] == 0) {
 				// 바로삭제
 		?>
-			<button class="red cancel_button disabled"><span class="label">모임 삭제</span></button>
+			<form style="display: inline" action="<?php echo site_url('/event/delete/' . $event->id);?>" method="get" onsubmit="return check_button(this);">
+				<button class="red cancel_button disabled"><span class="label">모임 삭제</span></button>
+			</form>
 		<?php
-			} else { ?>
-			<button class="red cancel_button disabled"><span class="label">모임 취소</span></button>
+			} else { ?>			
+			<form style="display: inline" action="<?php echo site_url('/event/cancel/' . $event->id);?>" method="get" onsubmit="return check_button(this);">
+				<button class="red cancel_button disabled"><span class="label">모임 취소</span></button>
+			</form>
 		<?php
 			} 
 		?>
@@ -248,6 +252,16 @@
 ?>
 		var resetButtonIntervalID = 0;
 		var lastButtonSec = 3;
+
+		function check_button(form)
+		{
+			var $button = $(form).find('button');
+			if($button.hasClass('disabled')) {
+				return false;
+			}
+
+			return true;
+		}
 
 		function event_cancel() 
 		{

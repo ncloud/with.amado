@@ -16,6 +16,7 @@ class Page extends APP_Controller {
                             APPPATH . 'webroot/css/plugin/humanmsg.css',                            
                             APPPATH . 'webroot/css/plugin/tipsy.css',                            
                             APPPATH . 'webroot/css/plugin/facebox.css',                            
+                            APPPATH . 'webroot/css/plugin/dropkick.css',                            
                             APPPATH . 'webroot/css/lib/ui.css',
                             APPPATH . 'webroot/css/lib/layout.css');
             $min_contents = $this->minify->combine_files($files, 'css', $this->debug ? false : true);
@@ -32,6 +33,7 @@ class Page extends APP_Controller {
                             APPPATH . 'webroot/js/plugin/jquery.textchange.js',
                             APPPATH . 'webroot/js/plugin/jquery.tipsy.js',
                             APPPATH . 'webroot/js/plugin/jquery.facebox.js',
+                            APPPATH . 'webroot/js/plugin/jquery.dropkick.js',
                             APPPATH . 'webroot/js/lib/user.js',
                             APPPATH . 'webroot/js/lib/less.js');
                           
@@ -127,7 +129,7 @@ class Page extends APP_Controller {
                     $data->id = $event_id;                        
 
                     $this->load->model('m_history');
-                    $this->m_history->add($event_id, $this->user_data->id, 'EVENT_CREATE', array('%1님이 "%2" 이벤트를 만들었습니다.', array($this->user_data->id, $event_id)));
+                    $this->m_history->add($event_id, $this->user_data->id, 'EVENT_CREATE', array('%1님이 "%2" 모임를 만들었습니다.', array($this->user_data->id, $data->title)));
 
                     $this->__auto_redirect($data);
                 }
@@ -205,7 +207,7 @@ class Page extends APP_Controller {
         $this->load->model('m_history');
 
         $event = $this->m_event->get($id);
-        if($event) {
+        if($event && $event->action == 'normal') {
             if($_POST && !empty($_POST)) {
                 if($this->m_event->check_in($id, $this->user_data->id)) { // 이미 참석함
                     $this->__auto_redirect($event);
@@ -267,7 +269,7 @@ class Page extends APP_Controller {
                 $this->m_event->rsvp_out($event->id, $this->user_data->id);
                 $this->m_event->event_decrement_count($event->id, 'rsvp_now');
 
-                $this->m_history->add($event->id, $this->user_data->id, 'RSVP_OUT', array('%1님이 "%2" 이벤트에서 참석 취소하셨습니다.', array($this->user_data->id, $event->id)));
+                $this->m_history->add($event->id, $this->user_data->id, 'RSVP_OUT', array('%1님이 "%2" 이벤트에서 참석 취소하셨습니다.', array($this->user_data->id, $event->title)));
 
                 $this->__auto_redirect($event);
             }
@@ -286,7 +288,7 @@ class Page extends APP_Controller {
         $now = mktime();
 
         $event = $this->m_event->get($id);
-        if($event && $event->user_id == $this->user_data->id && strtotime($event->rsvp_start_time) > $now) {
+        if($event && $event->user_id == $this->user_data->id && $event->action == 'normal' && strtotime($event->rsvp_start_time) > $now) {
             $errors = array();
             if($_POST && !empty($_POST)) {
                 $_POST['rsvp_now'] = $event->rsvp_now;
@@ -300,7 +302,7 @@ class Page extends APP_Controller {
                     $this->m_event->update($event->id, $data);              
 
                     $this->load->model('m_history');
-                    $this->m_history->add($event->id, $this->user_data->id, 'EVENT_CREATE', array('%1님이 "%2" 이벤트를 수정했습니다.', array($this->user_data->id, $event->id)));
+                    $this->m_history->add($event->id, $this->user_data->id, 'EVENT_CREATE', array('%1님이 "%2" 모임을 수정했습니다.', array($this->user_data->id, $event->title)));
 
                     $this->__auto_redirect($event);
                 }
@@ -338,6 +340,8 @@ class Page extends APP_Controller {
             $this->set('defaults', $defaults);
             $this->set('errors', $errors);
 
+            $this->set('event', $event);
+
             if(!empty($event->url)) {
                 $permalink = site_url('/',$event->url);
             } else {
@@ -346,6 +350,37 @@ class Page extends APP_Controller {
             $this->set('permalink', $permalink);
 
             $this->view('page/create');
+        } else {
+            redirect('/');
+        }
+    }
+
+    public function event_cancel($id)
+    {        
+        if(!$this->user_data->id) redirect('/');
+
+        $this->load->model('m_event');
+        $this->load->model('m_history');
+
+        $now = mktime();
+
+        $event = $this->m_event->get($id);
+        if($event && $event->user_id == $this->user_data->id && $event->action == 'normal') {
+            if($event->rsvp_now == 0) { // 참석자가 없으면 삭제 ...
+                $this->m_event->delete($event->id);
+                $this->m_history->add($event->id, $this->user_data->id, 'EVENT_DELETE', array('%1님이 "%2" 모임을 삭제했습니다.', array($this->user_data->id, $event->title)));
+
+                $this->set_notice_message('모임을 삭제했습니다.');
+
+                redirect('/');
+            } else { // 취소
+                $this->m_event->cancel($event->id);
+                $this->m_history->add($event->id, $this->user_data->id, 'EVENT_CANCEL', array('%1님이 "%2" 모임을 취소했습니다.', array($this->user_data->id, $event->title)));
+
+                $this->set_notice_message('모임을 취소했습니다.');
+
+                $this->__auto_redirect($event);
+            }
         } else {
             redirect('/');
         }
@@ -544,7 +579,7 @@ class Page extends APP_Controller {
         }
 
         $event->rsvp_percent = round($event->rsvp_now / $event->rsvp_max * 100);
-        $event->description = trim(Markdown($event->description));
+        $event->description = trim(Markdown(nl2br($event->description)));
 
         if(strtotime($event->rsvp_start_time) <= mktime()) {
             $event->is_end = true;

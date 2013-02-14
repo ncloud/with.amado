@@ -230,6 +230,7 @@ ul.events_list {}
 		ul.events_list > li .remain span.hint_1 { background:#B73000; }
 		ul.events_list > li .remain span.hint_2 { background:#CC4314; }
 		ul.events_list > li .remain span.hint_3 { background:#DD4000; }
+		ul.events_list > li .remain span.hint_cancel { background:#F3E964; color:#666; }
 		ul.events_list > li .remain span.hint_old { background:#9F804B; }
 
 	ul.events_list > li .title { float:left; }
@@ -238,8 +239,8 @@ ul.events_list {}
 		ul.events_list > li .title p { font-size:11px; color:#888; }
 			ul.events_list > li .title p strong { font-weight:bold; color:#888; }
 
-		ul.events_list > li.is_old  .title h3 a { color:#999; }
-		ul.events_list > li.is_old  .title p { color:#aaa; }
+		ul.events_list > li.is_disabled  .title h3 a { color:#999; }
+		ul.events_list > li.is_disabled  .title p { color:#aaa; }
 
 	ul.events_list > li .rsvps { float:right; width:100px; padding-top:5px; text-align:right; }
 		ul.events_list > li .rsvps > ol {}
@@ -270,7 +271,7 @@ ul.rsvp_users {}
 
 /* event_wrap */
 .event_title_wrap { position:relative; margin-bottom:20px; }
-	.event_title_wrap h3 { font-weight:bold; margin-bottom:20px; font-size:16px; }
+	.event_title_wrap h3 { font-weight:bold; margin-bottom:18px; font-size:16px; }
 
 	.event_title_wrap .status_wrap { position:absolute; right:0; top:0; font-size:12px; }
 	.event_title_wrap .status_wrap strong { font-weight:bold; }
@@ -280,6 +281,8 @@ ul.rsvp_users {}
 /* view */
 .view_wrap { padding-bottom:20px !important; font-size:13px;  }
 	.view_wrap article { }
+
+	.view_wrap .is_cancel { border-radius:4px; font-size:12px; background:#F3E964; color:#000; padding:6px; padding-left:10px; line-height:17px; margin-bottom:18px; }
 
 	.view_wrap .sidebar_wrap { font-size:12px; }
 
@@ -299,7 +302,7 @@ ul.rsvp_users {}
 		.view_wrap .admin_wrap .left_button { }
 			.view_wrap .admin_wrap .left_button button { margin:0; }
 
-		.view_wrap .admin_wrap .right_button { position:absolute; top:1px; right:5px; }
+		.view_wrap .admin_wrap .right_button { position:absolute; top:1px; right:0px; width:150px; text-align:right; }
 			.view_wrap .admin_wrap .right_button button { margin:0; }
 
 	.view_wrap .information_wrap { }

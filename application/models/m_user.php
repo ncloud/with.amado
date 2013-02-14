@@ -227,7 +227,7 @@ class M_User extends CI_Model
     }
     
     // ncloud
-    public function authenticate_vendor($vendor_name, $uid, $name, $display_name, $profile = '', $email = '', $gender = '')
+    public function authenticate_vendor($vendor_name, $uid, $name, $display_name, $profile = '', $email = '')
     {
         $this->load->library('auth');
         $this->load->library('input');
@@ -242,16 +242,18 @@ class M_User extends CI_Model
         $user = $this->db->from('users')->where(array('username' => $username, 'vendor_id' => $vendor_id))->get()->row();
         
         if(!empty($user)) {
-            $user->now_joined = false;
 
-            if($user->display_name != $display_name  || $user->profile != $profile) {
+            if($user->display_name != $display_name  || $user->profile != $profile || $user->email != $email) {
                 $user->display_name = $display_name;
                 $user->profile = $profile;
+                $user->email = $email;
                 
                 $this->db->where('id', $user->id);
                 $this->db->update('users', $user);
             }       
             $this->auth->login($user->username, $user->random_password);
+            
+            $user->now_joined = false;
             
             return $user;
         } else {    
@@ -260,6 +262,7 @@ class M_User extends CI_Model
             
             $user                       = new StdClass;          
             $user->profile              = $profile;
+            $user->email              = $email;
             $user->username             = $username;
             $user->vendor_id            = $vendor_id;
             $user->vendor_user_id       = $uid;

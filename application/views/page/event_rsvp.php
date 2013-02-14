@@ -34,6 +34,7 @@
 			?>
 			<span class="contact"><?php echo $user->contact;?></span>
 			<?php } ?>
+			<span class="contact"><?php echo $user->email;?></span>
 			<?php
 				if(!empty($user->message)) {
 			?>

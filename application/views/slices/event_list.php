@@ -5,20 +5,37 @@
 <?php
 		foreach($events as $event) {
 			$rsvp_time = strtotime($event->rsvp_start_time);
-			$is_old = $rsvp_time < mktime();
+			$is_disabled = $rsvp_time < mktime();
 			$hint_class = 'hint_old';
-			if(!$is_old) {
-				if($rsvp_time - mktime() <= 60*60*24) { // 오늘 이벤트
-					$hint_class = 'hint_1';
-				} else if($rsvp_time - mktime() <= 60*60*24*3) { // 3일 이내 이벤트 
-					$hint_class = 'htin_2';
+			if(!$is_disabled) {
+				if($event->action == 'cancel') {
+					$hint_class = 'hint_cancel';
+					$is_disabled = true;
 				} else {
-					$hint_class = 'hint_3';
+					if($rsvp_time - mktime() <= 60*60*24) { // 오늘 이벤트
+						$hint_class = 'hint_1';
+					} else if($rsvp_time - mktime() <= 60*60*24*3) { // 3일 이내 이벤트 
+						$hint_class = 'htin_2';
+					} else {
+						$hint_class = 'hint_3';
+					}
 				}
 			}
 ?>
-		<li<?php echo $is_old ? ' class="is_old"' : '';?>>
-			<div class="remain"><span class="<?php echo $hint_class;?>"><?php echo $this->date->string_from_now_to_remain($event->rsvp_start_time);?></span></div>
+		<li<?php echo $is_disabled ? ' class="is_disabled"' : '';?>>
+			<div class="remain">
+			<?php
+				if($event->action == 'cancel') {
+			?>				
+				<span class="<?php echo $hint_class;?>">취소됨</span>
+			<?php
+				} else {
+			?>
+				<span class="<?php echo $hint_class;?>"><?php echo $this->date->string_from_now_to_remain($event->rsvp_start_time);?></span>
+			<?php
+				}
+			?>
+			</div>
 			<div class="title">
 				<h3><a href="<?php echo site_url('/' . (!empty($event->url) ? $event->url : $event->id));?>"><?php echo $event->title;?></a></h3>
 				<p>
@@ -54,7 +71,7 @@
 			</div>
 			<div class="button">
 				<?php
-					if($is_old) {
+					if($is_disabled) {
 				?>
 				<p class="disabled">모임마감</p>
 				<?php

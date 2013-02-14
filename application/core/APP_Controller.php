@@ -8,7 +8,7 @@ class APP_Controller extends CI_Controller {
 	protected $site;
 
     protected $language;
-    
+
 	public $facebook; // for Facebook
 	
     function __construct()
@@ -23,7 +23,9 @@ class APP_Controller extends CI_Controller {
 
         $this->load->model('m_user');
         $this->load->model('m_user_token');
-        		
+
+        $this->load->library('session');
+		
 		$this->debug = false;
 		if($this->config->item('dev_mode')) {
 			 $this->debug = true;
@@ -106,6 +108,16 @@ class APP_Controller extends CI_Controller {
 			'secret' => $this->config->item('facebook_secret'),
 			'cookie' => true,
 		));	
+
+		$notice_message = $this->session->userdata('notice_message');
+		$this->session->unset_userdata('notice_message');
+
+		$this->set('notice_message', $notice_message);
+    }
+
+    protected function set_notice_message($message)
+    {
+    	$this->session->set_userdata('notice_message', $message);
     }
 
     protected function check_and_redirect_page()

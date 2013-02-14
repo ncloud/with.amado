@@ -1,10 +1,30 @@
-
+	<?php
+		$event_end = $event->is_end || $event->action == 'cancel';
+	?>
 	<div class="grid contents_wrap view_wrap">
 		<div class="row">
 			<div class="event_title_wrap">
+				<?php
+					if($event->action == 'cancel') {
+				?>
+				<p class="is_cancel">취소된 모임입니다.</p>
+				<?php
+					}
+				?>
+
 				<h3><a href="<?php echo $event->permalink;?>"><?php echo $event->title;?></a></h3>
+
+			<?php
+				if($event->action == 'cancel') {
+			?>
+				<div class="bar_progress">
+					<div class="remain" style="left:0%; width:100%;"></div>
+				</div>			
+			<?php
+				} else {
+			?>
 				<div class="status_wrap">
-					<span class="percent">현재 <strong class="tip" title="<?php echo '전체 ' . $event->rsvp_max . '명 중 ' . $event->rsvp_now . '명이 모집되었습니다';?>"><?php echo $event->rsvp_percent;?>%</strong> 모집</span>
+					<span class="percent"><?php echo $event_end ? '최종' : '현재';?> <strong class="tip" title="<?php echo '전체 ' . $event->rsvp_max . '명 중 ' . $event->rsvp_now . '명이 모집되었습니다';?>"><?php echo $event->rsvp_percent;?>%</strong> 모집</span>
 					<span class="remain"><?php echo $this->date->string_from_now_to_remain($event->rsvp_start_time, false, true);?></span>
 				</div>
 
@@ -12,6 +32,9 @@
 					<div class="fill" style="width:<?php echo $event->rsvp_percent;?>%;"></div>
 					<div class="remain" style="left:<?php echo $event->rsvp_percent;?>%; width:<?php echo 100-$event->rsvp_percent;?>%;"></div>
 				</div>
+			<?php
+				}
+			?>
 			</div>
 			<div class="article_wrap slot-0-1-2-3">
 				<article>
@@ -35,13 +58,26 @@
 				<div class="admin_wrap">
 					<div class="left_button">
 						<form style="display: inline" action="<?php echo site_url('/event/rsvp/' . $event->id);?>" method="get">
-							<button><span class="label">참석자 목록</span></button>
-						</form>					</div>
+							<button><span class="label">참석자</span></button>
+						</form>					
+					</div>
+					<?php
+						if(in_array($event->action, array('normal','pause'))) {
+					?>
 					<div class="right_button">	
 						<form style="display: inline" action="<?php echo site_url('/event/edit/' . $event->id);?>" method="get">
 							<button><span class="label">모임 편집</span></button>
 						</form>
+
+						<select id="action_change" name="pretty" class="dropdown">
+						  <option value="">상태 변경</option>
+						  <option value="finish">모집 종료</option>
+						  <option value="pause">모집 일시멈춤</option>
+						</select>
 					</div>
+					<?php
+						}
+					?>
 				</div>
 				<?php
 					}
@@ -88,7 +124,11 @@
 
 				<div class="join_wrap">
 				<?php 
-					if($event->is_end) {
+					if($event->action == 'cancel') {
+				?>
+					<p class="finish">취소된 모임입니다.</p>
+				<?php
+					} else if($event->is_end) {
 				?>
 					<p class="finish">마감된 모임입니다.</p>
 				<?php
@@ -155,3 +195,15 @@
 			</div>
 		</div>
 	</div>
+
+	<script type="text/javascript">
+		$(function() {
+            $('#action_change').dropkick({
+            	fitWidth:false,
+            	formMode: false,
+            	change:function(value, label) {
+
+            	}
+            });
+		});
+	</script>

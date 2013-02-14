@@ -40,6 +40,13 @@
 
        $(function() {
             $('.tip').tipsy();
+    <?php
+        if($notice_message && !empty($notice_message)) {
+    ?>
+            humanMsg.displayMsg('<?php echo $notice_message;?>');
+    <?php
+        }
+    ?>
        });
     </script>
 
