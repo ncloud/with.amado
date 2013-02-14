@@ -131,7 +131,7 @@
       $select.before($dk);
 
       // Update the reference to $dk
-      $dk = $('#dk_container_' + id).show();
+      $dk = $('#dk_container_' + id).css('display','inline-block');
 
       // Save the current theme
       theme = settings.theme ? settings.theme : 'default';
@@ -365,8 +365,7 @@
     return ($.trim(text).length > 0) ? text : false;
   }
 
-  $(function () {
-
+  $(function () {    
     // Handle click events on the dropdown toggler
     $('.dk_toggle').live('click', function (e) {
       var $dk  = $(this).parents('.dk_container').first();
@@ -392,7 +391,8 @@
     
       _closeDropdown($dk);
       _updateFields($option, $dk);
-      _setCurrent($option.parent(), $dk);
+
+      if(data.settings.formMode) _setCurrent($option.parent(), $dk);
     
       e.preventDefault();
       return false;

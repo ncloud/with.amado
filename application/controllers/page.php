@@ -386,6 +386,69 @@ class Page extends APP_Controller {
         }
     }
 
+    public function event_finish($id)
+    {        
+        if(!$this->user_data->id) redirect('/');
+
+        $this->load->model('m_event');
+        $this->load->model('m_history');
+
+        $now = mktime();
+
+        $event = $this->m_event->get($id);
+        if($event && $event->user_id == $this->user_data->id && in_array($event->action, array('normal','pause'))) {
+            $this->m_event->finish($event->id);
+            $this->m_history->add($event->id, $this->user_data->id, 'EVENT_FINISH', array('%1님이 "%2" 모임의 모집을 마감했습니다.', array($this->user_data->id, $event->title)));
+
+            $this->set_notice_message('모임의 모집을 마감했습니다.');
+            $this->__auto_redirect($event);
+        } else {
+            redirect('/');
+        }
+    }
+
+    public function event_resume($id)
+    {        
+        if(!$this->user_data->id) redirect('/');
+
+        $this->load->model('m_event');
+        $this->load->model('m_history');
+
+        $now = mktime();
+
+        $event = $this->m_event->get($id);
+        if($event && $event->user_id == $this->user_data->id && $event->action == 'pause') {
+            $this->m_event->resume($event->id);
+            $this->m_history->add($event->id, $this->user_data->id, 'EVENT_RESUME', array('%1님이 "%2" 모임의 모집을 다시 시작했습니다.', array($this->user_data->id, $event->title)));
+
+            $this->set_notice_message('모임의 모집을 다시 시작했습니다.');
+            $this->__auto_redirect($event);
+        } else {
+            redirect('/');
+        }
+    }
+
+    public function event_pause($id)
+    {        
+        if(!$this->user_data->id) redirect('/');
+
+        $this->load->model('m_event');
+        $this->load->model('m_history');
+
+        $now = mktime();
+
+        $event = $this->m_event->get($id);
+        if($event && $event->user_id == $this->user_data->id && $event->action == 'normal') {
+            $this->m_event->pause($event->id);
+            $this->m_history->add($event->id, $this->user_data->id, 'EVENT_PAUSE', array('%1님이 "%2" 모임의 모집을 잠시 멈췄습니다.', array($this->user_data->id, $event->title)));
+
+            $this->set_notice_message('모임의 모집을 잠시 멈췄습니다.');
+            $this->__auto_redirect($event);
+        } else {
+            redirect('/');
+        }
+    }
+
     private function __in($event, $form, &$errors)
     {
         $data = new StdClass;

@@ -1743,7 +1743,6 @@ iframe { border:none; }
   font-size: 12px;
   font-weight: bold;
   line-height: 14px;
-  margin-bottom: 18px;
   border-radius: 2px;
 }
   .dk_container:focus {
@@ -1769,6 +1768,7 @@ iframe { border:none; }
   border-radius: 2px;
   text-decoration:none;
   transition: border-color .20s;
+  box-shadow:0px 1px 1px rgba(0,0,0,0.05);
 }
   .dk_toggle:hover {
     border-color: #C0C0C0;
@@ -1823,7 +1823,6 @@ iframe { border:none; }
 /* Inner container for options, this is what makes the scrollbar possible. */
 .dk_options_inner {
   border: 1px solid #8c8c8e;
-  border-bottom-width: 2px;
   border-bottom-color: #999;
   color: #333;
   max-height: 250px;
@@ -1841,7 +1840,6 @@ iframe { border:none; }
 
 .dk_container {
   display: none;
-  float: left;
   position: relative;
 }
   .dk_container a {
@@ -2131,14 +2129,13 @@ iframe { border:none; }
 		font-size:12px;
 		color: #444;
 		line-height: 18px;
-		height: 18px;
 		display: inline-block;
 		padding: 5px 6px 4px 6px;
 		background: #F3F3F3;
 		border: solid 1px #D9D9D9;
 		border-radius: 2px;
 		transition: border-color .20s;
-		height: 29px;
+		height: 30px;
 		cursor: pointer;
 		vertical-align:middle; 
 		box-shadow:0px 1px 1px rgba(0,0,0,0.05);
@@ -2538,6 +2535,9 @@ ul.rsvp_users {}
 
 		.view_wrap .admin_wrap .right_button { position:absolute; top:1px; right:0px; width:150px; text-align:right; }
 			.view_wrap .admin_wrap .right_button button { margin:0; }
+
+			.view_wrap .admin_wrap .right_button form { display:inline-block; vertical-align: middle; margin-right:4px;}
+			.view_wrap .admin_wrap .right_button .dk_container { vertical-align: middle; }
 
 	.view_wrap .information_wrap { }
 

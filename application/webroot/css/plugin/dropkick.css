@@ -16,7 +16,6 @@
   font-size: 12px;
   font-weight: bold;
   line-height: 14px;
-  margin-bottom: 18px;
   border-radius: 2px;
 }
   .dk_container:focus {
@@ -42,6 +41,7 @@
   border-radius: 2px;
   text-decoration:none;
   transition: border-color .20s;
+  box-shadow:0px 1px 1px rgba(0,0,0,0.05);
 }
   .dk_toggle:hover {
     border-color: #C0C0C0;
@@ -96,7 +96,6 @@
 /* Inner container for options, this is what makes the scrollbar possible. */
 .dk_options_inner {
   border: 1px solid #8c8c8e;
-  border-bottom-width: 2px;
   border-bottom-color: #999;
   color: #333;
   max-height: 250px;
@@ -114,7 +113,6 @@
 
 .dk_container {
   display: none;
-  float: left;
   position: relative;
 }
   .dk_container a {

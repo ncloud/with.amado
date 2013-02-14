@@ -8,7 +8,7 @@
 			$is_disabled = $rsvp_time < mktime();
 			$hint_class = 'hint_old';
 			if(!$is_disabled) {
-				if($event->action == 'cancel') {
+				if(in_array($event->action, array('cancel','pause','finish'))) {
 					$hint_class = 'hint_cancel';
 					$is_disabled = true;
 				} else {
@@ -28,6 +28,14 @@
 				if($event->action == 'cancel') {
 			?>				
 				<span class="<?php echo $hint_class;?>">취소됨</span>
+			<?php
+				} else if($event->action == 'finish') {
+			?>
+				<span class="<?php echo $hint_class;?>">조기마감</span>
+			<?php
+				} else if($event->action == 'pause') {
+			?>
+				<span class="<?php echo $hint_class;?>">잠시멈춤</span>
 			<?php
 				} else {
 			?>
@@ -73,7 +81,13 @@
 				<?php
 					if($is_disabled) {
 				?>
-				<p class="disabled">모임마감</p>
+				<p class="disabled">
+					<?php if($event->action == 'pause') { ?>
+					잠시 멈춤
+					<?php } else { ?>
+					모집 마감
+					<?php } ?>
+				</p>
 				<?php
 					} else {
 						if(isset($rsvp_user_ids[$event->id]) && in_array($current_user->id, $rsvp_user_ids[$event->id])) {

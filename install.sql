@@ -19,6 +19,8 @@ CREATE TABLE `events` (
   `rsvp_set_start_time` enum('yes','no') DEFAULT 'no',
   `rsvp_end_time` datetime DEFAULT NULL,
   `rsvp_set_end_time` enum('yes','no') DEFAULT 'no',
+  `action` enum('normal','cancel','pause','finish') DEFAULT 'normal',
+  `action_time` datetime DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `start_time` datetime DEFAULT NULL,
@@ -95,6 +97,7 @@ CREATE TABLE `users` (
   `name` varchar(100) NOT NULL,
   `display_name` varchar(100) NOT NULL DEFAULT '',
   `language` varchar(2) DEFAULT 'en',
+  `email` varchar(128) DEFAULT NULL,
   `activation_key` varchar(100) NOT NULL,
   `is_verified` enum('yes','no') DEFAULT 'no',
   `login_count` int(11) unsigned NOT NULL DEFAULT '0',
@@ -105,7 +108,7 @@ CREATE TABLE `users` (
   `modify_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `vendor_id` (`vendor_id`,`vendor_user_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `rsvps` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

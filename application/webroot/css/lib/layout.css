@@ -305,6 +305,9 @@ ul.rsvp_users {}
 		.view_wrap .admin_wrap .right_button { position:absolute; top:1px; right:0px; width:150px; text-align:right; }
 			.view_wrap .admin_wrap .right_button button { margin:0; }
 
+			.view_wrap .admin_wrap .right_button form { display:inline-block; vertical-align: middle; margin-right:4px;}
+			.view_wrap .admin_wrap .right_button .dk_container { vertical-align: middle; }
+
 	.view_wrap .information_wrap { }
 
 		.view_wrap .information_wrap .maker_wrap { position:relative; border-radius:4px;  background:#f8f8f8; border:1px solid #ccc; margin-bottom:17px; padding:10px; box-shadow:0px 1px 1px rgba(0,0,0,0.1); }

@@ -4424,7 +4424,8 @@ jQuery(document).ready(function(){
       'up'    : 38,
       'right' : 39,
       'down'  : 40,
-      'enter' : 13
+      'enter' : 13,
+      'esc'   : 27
     },
 
     // HTML template for the dropdowns
@@ -4522,7 +4523,7 @@ jQuery(document).ready(function(){
       $select.before($dk);
 
       // Update the reference to $dk
-      $dk = $('#dk_container_' + id).show();
+      $dk = $('#dk_container_' + id).css('display','inline-block');
 
       // Save the current theme
       theme = settings.theme ? settings.theme : 'default';
@@ -4549,16 +4550,6 @@ jQuery(document).ready(function(){
           }
         }
       });
-
-      // ncloud added
-      $(document).on( 'keydown.dropkick', function( event ) {
-            var keycode = event.keyCode;
-
-            // On escape
-            if ( keycode == 27 ) {
-               _closeDropdown($dk);
-            }
-        });
 
       // Focus events
       $dk.bind('focus.dropkick', function (e) {
@@ -4630,6 +4621,10 @@ jQuery(document).ready(function(){
     ;
 
     switch (code) {
+      case keyMap.esc:
+          _closeDropdown($dk);
+      break;
+
       case keyMap.enter:
         if (open) {
           _updateFields(current.find('a'), $dk);
@@ -4762,8 +4757,7 @@ jQuery(document).ready(function(){
     return ($.trim(text).length > 0) ? text : false;
   }
 
-  $(function () {
-
+  $(function () {    
     // Handle click events on the dropdown toggler
     $('.dk_toggle').live('click', function (e) {
       var $dk  = $(this).parents('.dk_container').first();
@@ -4789,7 +4783,8 @@ jQuery(document).ready(function(){
     
       _closeDropdown($dk);
       _updateFields($option, $dk);
-      _setCurrent($option.parent(), $dk);
+
+      if(data.settings.formMode) _setCurrent($option.parent(), $dk);
     
       e.preventDefault();
       return false;

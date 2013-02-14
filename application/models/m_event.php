@@ -47,6 +47,16 @@ class m_event extends CI_Model
         return $this->db->update('events', $data);
     }
 
+    function resume($id)
+    {
+        $data = new StdClass;
+        $data->action = 'normal';
+        $data->action_time = date('Y-m-d H:i:s', mktime());
+
+        $this->db->where('id', $id);
+        return $this->db->update('events', $data);
+    }
+
     function get($id) {
         return $this->db->from('events')->join('users','users.id = events.user_id')->where('events.id', $id)->select('events.*, users.profile as user_profile, users.display_name as user_display_name')->get()->row();        
     }

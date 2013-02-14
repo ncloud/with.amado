@@ -1,17 +1,24 @@
 	<?php
-		$event_end = $event->is_end || $event->action == 'cancel';
+		$event_end = $event->is_end || $event->action == 'cancel' || $event->action == 'finish';
 	?>
 	<div class="grid contents_wrap view_wrap">
 		<div class="row">
+			<?php
+				if($event->action == 'cancel') {
+			?>
+			<p class="is_cancel">취소된 모임입니다.</p>
+			<?php
+				} else if($event->action == 'finish') {
+			?>
+			<p class="is_cancel">개설자가 조기 마감한 모임입니다.</p>
+			<?php
+				} else if($event->action == 'pause') {
+			?>
+			<p class="is_cancel">개설자가 모집을 잠시 멈춘 모임입니다.</p>
+			<?php
+				}
+			?>
 			<div class="event_title_wrap">
-				<?php
-					if($event->action == 'cancel') {
-				?>
-				<p class="is_cancel">취소된 모임입니다.</p>
-				<?php
-					}
-				?>
-
 				<h3><a href="<?php echo $event->permalink;?>"><?php echo $event->title;?></a></h3>
 
 			<?php
@@ -65,14 +72,31 @@
 						if(in_array($event->action, array('normal','pause'))) {
 					?>
 					<div class="right_button">	
-						<form style="display: inline" action="<?php echo site_url('/event/edit/' . $event->id);?>" method="get">
+						<form action="<?php echo site_url('/event/edit/' . $event->id);?>" method="get">
 							<button><span class="label">모임 편집</span></button>
 						</form>
 
 						<select id="action_change" name="pretty" class="dropdown">
 						  <option value="">상태 변경</option>
-						  <option value="finish">모집 종료</option>
+						<?php
+							if($event->rsvp_now > 0) {
+						?>
+						  <option value="finish">모집 마감</option>
+						<?php
+							}
+						?>
+
+						<?php
+							if($event->action == 'pause') {
+						?>
+						  <option value="resume">모집 다시시작</option>
+						<?php
+							} else {
+						?>
 						  <option value="pause">모집 일시멈춤</option>
+						<?php 
+							}
+						?>
 						</select>
 					</div>
 					<?php
@@ -127,6 +151,14 @@
 					if($event->action == 'cancel') {
 				?>
 					<p class="finish">취소된 모임입니다.</p>
+				<?php
+					} else if($event->action == 'finish') {
+				?>
+					<p class="finish">조기 마감된 모임입니다.</p>
+				<?php
+					} else if($event->action == 'pause') {
+				?>
+					<p class="finish">모집을 잠시 멈춘 모임입니다.</p>
 				<?php
 					} else if($event->is_end) {
 				?>
@@ -198,12 +230,31 @@
 
 	<script type="text/javascript">
 		$(function() {
+		<?php 
+			if(!$event->is_end && $event->user_id == $current_user->id) {
+		?>			
             $('#action_change').dropkick({
             	fitWidth:false,
             	formMode: false,
             	change:function(value, label) {
+            		if(value == 'finish') {
+            			if(confirm('현재 정원 중 <?php echo $event->rsvp_max - $event->rsvp_now;?>명이 덜 모집되었습니다.\n그래도 모집을 마감하시겠습니까?')) {
+            				go('<?php echo site_url('/event/finish/' . $event->id);?>');
+            			}
+            		} else if(value == 'pause') {
+            			if(confirm('모집을 잠시 멈추시겠습니까?\n대신 언제든지 다시 모집하실 수 있습니다.')) {
+            				go('<?php echo site_url('/event/pause/' . $event->id);?>');
+            			}
+            		} else if(value == 'resume') {
+            			if(confirm('모집을 다시 시작하시겠습니까?')) {
+            				go('<?php echo site_url('/event/resume/' . $event->id);?>');
+            			}
 
+            		}
             	}
             });
+        <?php
+        	}
+        ?>
 		});
 	</script>

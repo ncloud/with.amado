@@ -58,6 +58,9 @@ $route['event/edit/(:num)']						= 'page/event_edit/$1';
 $route['event/rsvp/(:num)']						= 'page/event_rsvp/$1';
 $route['event/delete/(:num)']					= 'page/event_cancel/$1';
 $route['event/cancel/(:num)']					= 'page/event_cancel/$1';
+$route['event/finish/(:num)']					= 'page/event_finish/$1';
+$route['event/pause/(:num)']					= 'page/event_pause/$1';
+$route['event/resume/(:num)']					= 'page/event_resume/$1';
 
 $route['(:any)']                             	= 'page/event/$1';
 
