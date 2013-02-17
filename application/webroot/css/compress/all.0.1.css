@@ -2470,7 +2470,6 @@ ul.events_list {}
 
 	ul.events_list > li .title { float:left; }
 		ul.events_list > li .title h3 { line-height:20px; font-weight:bold; margin-bottom:2px; }
-			ul.events_list > li .title h3 a { text-decoration: underline; }
 
 		ul.events_list > li .title p { font-size:11px; color:#888; }
 			ul.events_list > li .title p strong { font-weight:bold; color:#888; }
