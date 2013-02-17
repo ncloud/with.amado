@@ -67,7 +67,17 @@
     <header>
         <div class="grid contents_wrap">
             <div class="row">
-                <h1 class='slot-0-1-2-3'><a href="<?php echo site_url('/');?>"><?php echo $title_for_layout;?></a></h1>
+                <h1 class='slot-0'><a href="<?php echo site_url('/');?>"><?php echo $title_for_layout;?></a></h1>
+                
+                <div class="slot-1-2-3">
+                    <ul class="main_menu">
+                        <li class="explore">
+                            <h4><a href="#">모임 탐색</a></h4>
+                            <p>다가오는 모임들을 확인합니다</p>
+                        </li>
+                    </ul>
+                </div>
+
                 <div class="slot-4-5 user_wrap">
                     <?php if($current_user->id) {
                     ?>

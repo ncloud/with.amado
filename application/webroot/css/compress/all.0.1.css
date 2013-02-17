@@ -2240,6 +2240,11 @@ header { background:#fff; margin-bottom:20px; border-bottom:1px solid #ddd;}
 		header h1 a { color:#333; text-decoration:none; }
 		header h1 a:hover { text-decoration:underline; }
 
+	header .main_menu { font-size:11px; margin-top:4px; }
+		header .main_menu h4 { font-size:12px; font-weight:bold; margin-bottom:4px; }
+			header .main_menu h4 a { text-decoration: underline; }
+		header .main_menu p { color:#666; }
+
 	header .contents_wrap { padding-top:10px; padding-bottom:10px; }
 	header .user_wrap { text-align:right; }
 		header .user_wrap .user { display:inline-block; margin:5px; margin-right:10px; }
@@ -2455,9 +2460,8 @@ article { line-height:20px; }
 ul.events_list {}
 	ul.events_list > li { font-size:13px; }
 	ul.events_list > li .remain { float:left; width:80px; text-align:right; margin-right:10px }
-		ul.events_list > li .remain span { display:inline-block; margin-top:6px; padding:4px; font-size:11px; color:#fff; border-radius:4px; }
+		ul.events_list > li .remain span { display:inline-block; margin-top:8px; padding:4px; font-size:11px; color:#fff; border-radius:4px; }
 		
-		 
 		ul.events_list > li .remain span.hint_1 { background:#B73000; }
 		ul.events_list > li .remain span.hint_2 { background:#CC4314; }
 		ul.events_list > li .remain span.hint_3 { background:#DD4000; }
@@ -2465,13 +2469,15 @@ ul.events_list {}
 		ul.events_list > li .remain span.hint_old { background:#9F804B; }
 
 	ul.events_list > li .title { float:left; }
-		ul.events_list > li .title h3 { line-height:20px; font-weight:bold; }
+		ul.events_list > li .title h3 { line-height:20px; font-weight:bold; margin-bottom:2px; }
+			ul.events_list > li .title h3 a { text-decoration: underline; }
 
 		ul.events_list > li .title p { font-size:11px; color:#888; }
 			ul.events_list > li .title p strong { font-weight:bold; color:#888; }
 
 		ul.events_list > li.is_disabled  .title h3 a { color:#999; }
 		ul.events_list > li.is_disabled  .title p { color:#aaa; }
+			ul.events_list > li.is_disabled  .title p strong { color:#aaa; }
 
 	ul.events_list > li .rsvps { float:right; width:100px; padding-top:5px; text-align:right; }
 		ul.events_list > li .rsvps > ol {}
@@ -2503,6 +2509,7 @@ ul.rsvp_users {}
 /* event_wrap */
 .event_title_wrap { position:relative; margin-bottom:20px; }
 	.event_title_wrap h3 { font-weight:bold; margin-bottom:18px; font-size:16px; }
+	.event_title_wrap h3 a { color:#333; }
 
 	.event_title_wrap .status_wrap { position:absolute; right:0; top:0; font-size:12px; }
 	.event_title_wrap .status_wrap strong { font-weight:bold; }

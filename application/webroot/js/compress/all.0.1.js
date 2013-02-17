@@ -3695,7 +3695,7 @@ var humanMsg = {
 			.unbind('keypress', humanMsg.removeMsg)
 		
 		var $obj = jQuery('#'+humanMsg.msgID);
-		$obj.stop().delay(400).animate({ top: $(window).height() + 'px' }, 800, function() { jQuery(this).hide() })
+		$obj.stop().delay(400).animate({ bottom: (0-$obj.height()) + 'px' }, 800, function() { jQuery(this).hide() })
 	}
 };
 
