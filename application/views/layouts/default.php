@@ -72,7 +72,7 @@
                 <div class="slot-1-2-3">
                     <ul class="main_menu">
                         <li class="explore">
-                            <h4><a href="#">모임 탐색</a></h4>
+                            <h4><a href="<?php echo site_url('/explore');?>">모임 탐색</a></h4>
                             <p>다가오는 모임들을 확인합니다</p>
                         </li>
                     </ul>

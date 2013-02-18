@@ -50,8 +50,9 @@ $route['join/do']                               = 'user/join';
 // First Login
 $route['step/welcome']							= 'page/welcome';
 
-// Create
 $route['create']								= 'page/create';
+$route['explore']								= 'page/explore';
+
 $route['event/in/(:num)']						= 'page/event_in/$1';
 $route['event/out/(:num)']						= 'page/event_out/$1';
 $route['event/edit/(:num)']						= 'page/event_edit/$1';

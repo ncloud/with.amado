@@ -1,5 +1,3 @@
-
-
 CREATE TABLE `events` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `site_id` int(11) unsigned DEFAULT NULL,
@@ -37,13 +35,6 @@ CREATE TABLE `role_users` (
   KEY `fk_role_id` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOCK TABLES `role_users` WRITE;
-/*!40000 ALTER TABLE `role_users` DISABLE KEYS */;
-
-INSERT INTO `role_users` (`user_id`, `role_id`)
-VALUES
-  (1,1);
-
 CREATE TABLE `roles` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
@@ -51,6 +42,11 @@ CREATE TABLE `roles` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `roles` (`id`, `name`, `description`) VALUES 
+  (1, "login", "로그인한 사용자입니다."), 
+  (2, "guest", "로그인하지 않은 방문자입니다."), 
+  (3, "admin", "관리자입니다. 관리자는 모든 권한을 다 가지고 있습니다.");
 
 CREATE TABLE `sessions` (
   `session_id` varchar(40) NOT NULL DEFAULT '0',

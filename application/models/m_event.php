@@ -66,6 +66,21 @@ class m_event extends CI_Model
         return $this->db->from('events')->join('users','users.id = events.user_id')->where('events.site_id',$site_id)->where('events.url', $url)->select('events.*, users.profile as user_profile, users.display_name as user_display_name')->get()->row();        
     }
 
+    function gets($site_id, $count = 30, $index = 1) 
+    {
+        $now = date('Y-m-d H:i:s', mktime());
+        $this->db->from('events')->join('users','users.id = events.user_id')->where('events.site_id', $site_id)->where('events.rsvp_start_time >=', $now)->order_by('events.rsvp_start_time ASC')->select('events.*, users.profile, users.display_name');
+
+                
+        if($index > 1) {
+            $this->db->limit($count, ($index - 1));
+        } else {
+            $this->db->limit($count);
+        }
+
+        return $this->db->get()->result();
+    }
+
     function gets_by_me($site_id, $user_id)
     {
         return $this->db->from('events')->where('events.site_id', $site_id)->where('events.user_id', $user_id)->order_by('events.create_time DESC')->select('events.*')->get()->result();

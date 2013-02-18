@@ -15,7 +15,7 @@
 					if($rsvp_time - mktime() <= 60*60*24) { // 오늘 이벤트
 						$hint_class = 'hint_1';
 					} else if($rsvp_time - mktime() <= 60*60*24*3) { // 3일 이내 이벤트 
-						$hint_class = 'htin_2';
+						$hint_class = 'hint_2';
 					} else {
 						$hint_class = 'hint_3';
 					}

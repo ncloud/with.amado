@@ -112,6 +112,38 @@ class Page extends APP_Controller {
 
     }
 
+    function explore() // 탐색
+    {
+        $this->load->model('m_event');
+
+        $event_ids = array();
+        
+        $events = $this->m_event->gets($this->site->id,30);
+        foreach($events as $key=>$event) {
+            $event_ids[] = $event->id;
+            $events[$key] = $this->__default($event);
+        }
+        $this->set('events', $events);
+
+        $rsvp_user_ids = array();
+        $result = $this->m_event->gets_rsvp($event_ids);
+        if($result) {
+            foreach($result as $item) {
+                if(!isset($rsvp_users[$item->event_id])) {
+                    $rsvp_users[$item->event_id] = array();
+                    $rsvp_user_ids[$item->event_id] = array();
+                }
+                $rsvp_users[$item->event_id][] = $item;
+                $rsvp_user_ids[$item->event_id][] = $item->user_id;
+            }
+        }
+
+        $this->set('rsvp_users', $rsvp_users);
+        $this->set('rsvp_user_ids', $rsvp_user_ids);
+
+        $this->view('page/explore');
+    }
+
     function create() // 만들기
     {
         if(!$this->user_data->id) {
@@ -599,7 +631,7 @@ class Page extends APP_Controller {
                 if($return_false) return false;
             }
 
-            if(empty($errors['url']) && in_array($url, array('join','signin','signout','login','logout','admin','owner','official','create','delete','welcome','search','find'))) {
+            if(empty($errors['url']) && in_array($url, array('join','signin','signout','login','logout','admin','owner','official','create','delete','welcome','search','find','explore','register','community','forum'))) {
                 $errors['url'] = '사용하실 수 없는 주소입니다.';
                 if($return_false) return false;
             }
