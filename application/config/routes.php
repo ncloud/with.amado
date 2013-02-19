@@ -63,6 +63,8 @@ $route['event/finish/(:num)']					= 'page/event_finish/$1';
 $route['event/pause/(:num)']					= 'page/event_pause/$1';
 $route['event/resume/(:num)']					= 'page/event_resume/$1';
 
+$route['ajax/more_events/(:num)/(:num)/(:num)'] = 'ajax/more_events/$1/$2/$3';
+
 $route['(:any)']                             	= 'page/event/$1';
 
 /* End of file routes.php */

@@ -66,19 +66,32 @@ class m_event extends CI_Model
         return $this->db->from('events')->join('users','users.id = events.user_id')->where('events.site_id',$site_id)->where('events.url', $url)->select('events.*, users.profile as user_profile, users.display_name as user_display_name')->get()->row();        
     }
 
-    function gets($site_id, $count = 30, $index = 1) 
+    function gets($site_id, $count = 30, $index = 1, $where = null) 
     {
         $now = date('Y-m-d H:i:s', mktime());
-        $this->db->from('events')->join('users','users.id = events.user_id')->where('events.site_id', $site_id)->where('events.rsvp_start_time >=', $now)->order_by('events.rsvp_start_time ASC')->select('events.*, users.profile, users.display_name');
 
-                
+        $this->db->from('events')->join('users','users.id = events.user_id')->where('events.site_id', $site_id)->where('events.rsvp_start_time >=', $now)->order_by('events.rsvp_start_time ASC')->select('events.*, users.profile, users.display_name');
+        
         if($index > 1) {
             $this->db->limit($count, ($index - 1));
         } else {
             $this->db->limit($count);
         }
 
+        if($where) {
+            $this->db->where($where);
+        }
+
         return $this->db->get()->result();
+    }
+
+    function get_count($site_id)
+    {       
+        $now = date('Y-m-d H:i:s', mktime());
+
+        $result = $this->db->from('events')->where('site_id',$site_id)->where('events.rsvp_start_time >=', $now)->select('count(*) as count')->get()->row();
+        if($result) return $result->count;
+        return 0;
     }
 
     function gets_by_me($site_id, $user_id)

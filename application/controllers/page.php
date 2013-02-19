@@ -34,6 +34,7 @@ class Page extends APP_Controller {
                             APPPATH . 'webroot/js/plugin/jquery.tipsy.js',
                             APPPATH . 'webroot/js/plugin/jquery.facebox.js',
                             APPPATH . 'webroot/js/plugin/jquery.dropkick.js',
+                            //APPPATH . 'webroot/js/plugin/jquery.masonry.js',
                             APPPATH . 'webroot/js/lib/user.js',
                             APPPATH . 'webroot/js/lib/less.js');
                           
@@ -118,12 +119,27 @@ class Page extends APP_Controller {
 
         $event_ids = array();
         
-        $events = $this->m_event->gets($this->site->id,30);
-        foreach($events as $key=>$event) {
-            $event_ids[] = $event->id;
-            $events[$key] = $this->__default($event);
+        $count = $this->m_event->get_count($this->site->id);
+
+        $max_event_time = 0;
+        $min_event_time = 0;
+
+        $event_get_count = 30;
+
+        $events = $this->m_event->gets($this->site->id, $event_get_count);
+        if(count($events)) {
+            $max_event_time = strtotime($events[0]->rsvp_start_time);
+
+            foreach($events as $key=>$event) {
+                $event_ids[] = $event->id;
+                $events[$key] = $this->__default($event);
+            }
         }
+
         $this->set('events', $events);
+        $this->set('have_more_events', $count > count($events));
+        $this->set('max_event_time',$max_event_time);
+        $this->set('event_get_count', $event_get_count);
 
         $rsvp_user_ids = array();
         $result = $this->m_event->gets_rsvp($event_ids);
