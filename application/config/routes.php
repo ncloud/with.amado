@@ -53,6 +53,8 @@ $route['step/welcome']							= 'page/welcome';
 $route['create']								= 'page/create';
 $route['explore']								= 'page/explore';
 
+$route['user/(:num)']							= 'page/user/$1';
+
 $route['event/in/(:num)']						= 'page/event_in/$1';
 $route['event/out/(:num)']						= 'page/event_out/$1';
 $route['event/edit/(:num)']						= 'page/event_edit/$1';

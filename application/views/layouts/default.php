@@ -81,7 +81,9 @@
                 <div class="slot-4-5 user_wrap">
                     <?php if($current_user->id) {
                     ?>
-                    <span class="user"><img src="<?php echo $current_user->profile;?>" alt="profile" /><span><?php echo $current_user->name;?></span></span>
+                    <span class="user">
+                        <a href="<?php echo site_url('/user/' . $current_user->id);?>"><img src="<?php echo $current_user->profile;?>" alt="profile" /><span><?php echo $current_user->name;?></a>
+                    </span></span>
                     <form style="display: inline" action="<?php echo site_url('/logout');?>" method="get">
                         <button class="red"><span class="label">로그아웃</span></button>
                     </form>

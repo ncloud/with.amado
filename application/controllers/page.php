@@ -108,6 +108,17 @@ class Page extends APP_Controller {
         $this->view('page/login');
     }
 
+    function user($user_id)
+    {
+        if(!empty($user_id))
+        {
+            $this->load->model('m_user');
+
+            $user = $this->m_user->get($user_id);
+            print_r($user);
+        }
+    }
+
     function welcome() // 첫 로그인 시에 ..
     {
 
@@ -141,6 +152,7 @@ class Page extends APP_Controller {
         $this->set('max_event_time',$max_event_time);
         $this->set('event_get_count', $event_get_count);
 
+        $rsvp_users = array();
         $rsvp_user_ids = array();
         $result = $this->m_event->gets_rsvp($event_ids);
         if($result) {
