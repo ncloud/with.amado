@@ -94,6 +94,15 @@ class m_event extends CI_Model
         return 0;
     }
 
+    function get_count_by_user_id($site_id, $user_id)
+    {       
+        $now = date('Y-m-d H:i:s', mktime());
+
+        $result = $this->db->from('events')->where('site_id',$site_id)->where('events.rsvp_start_time >=', $now)->where('events.user_id',$user_id)->select('count(*) as count')->get()->row();
+        if($result) return $result->count;
+        return 0;
+    }
+
     function gets_by_me($site_id, $user_id)
     {
         return $this->db->from('events')->where('events.site_id', $site_id)->where('events.user_id', $user_id)->order_by('events.create_time DESC')->select('events.*')->get()->result();

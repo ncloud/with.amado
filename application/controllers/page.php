@@ -108,20 +108,59 @@ class Page extends APP_Controller {
         $this->view('page/login');
     }
 
+    function welcome() // 첫 로그인 시에 ..
+    {
+
+    }
+
     function user($user_id)
     {
         if(!empty($user_id))
         {
+            $this->load->model('m_event');
             $this->load->model('m_user');
 
             $user = $this->m_user->get($user_id);
-            print_r($user);
+            
+            $event_full_count = $this->m_event->get_count_by_user_id($this->site->id, $user_id);
+
+            $max_event_time = 0;
+            $event_get_count = 30;
+
+            $events = $this->m_event->gets($this->site->id, $event_get_count, 1, array('events.user_id'=>$user_id));
+            if(count($events)) {
+                $max_event_time = strtotime($events[0]->rsvp_start_time);
+
+                foreach($events as $key=>$event) {
+                    $event_ids[] = $event->id;
+                    $events[$key] = $this->__default($event);
+                }
+            }
+
+            $this->set('events', $events);
+            $this->set('have_more_events', $event_full_count > count($events));
+            $this->set('max_event_time',$max_event_time);
+            $this->set('event_get_count', $event_get_count);
+
+            $rsvp_users = array();
+            $rsvp_user_ids = array();
+            $result = $this->m_event->gets_rsvp($event_ids);
+            if($result) {
+                foreach($result as $item) {
+                    if(!isset($rsvp_users[$item->event_id])) {
+                        $rsvp_users[$item->event_id] = array();
+                        $rsvp_user_ids[$item->event_id] = array();
+                    }
+                    $rsvp_users[$item->event_id][] = $item;
+                    $rsvp_user_ids[$item->event_id][] = $item->user_id;
+                }
+            }
+
+            $this->set('rsvp_users', $rsvp_users);
+            $this->set('rsvp_user_ids', $rsvp_user_ids);
+
+            $this->view('page/user');
         }
-    }
-
-    function welcome() // 첫 로그인 시에 ..
-    {
-
     }
 
     function explore() // 탐색
@@ -130,11 +169,9 @@ class Page extends APP_Controller {
 
         $event_ids = array();
         
-        $count = $this->m_event->get_count($this->site->id);
+        $event_full_count = $this->m_event->get_count($this->site->id);
 
         $max_event_time = 0;
-        $min_event_time = 0;
-
         $event_get_count = 30;
 
         $events = $this->m_event->gets($this->site->id, $event_get_count);
@@ -148,8 +185,9 @@ class Page extends APP_Controller {
         }
 
         $this->set('events', $events);
-        $this->set('have_more_events', $count > count($events));
+        $this->set('have_more_events', $event_full_count > count($events));
         $this->set('max_event_time',$max_event_time);
+
         $this->set('event_get_count', $event_get_count);
 
         $rsvp_users = array();
