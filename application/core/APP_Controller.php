@@ -80,7 +80,7 @@ class APP_Controller extends CI_Controller {
 		if($this->input->is_ajax_request()) {
 		    $this->layout->setLayout('layouts/empty');
 		} else {
-			$this->output->enable_profiler();
+		//	$this->output->enable_profiler(TRUE);
 
 			if($this->router->class == 'user' && in_array($this->router->method,array('login_facebook','logout'))) 
 			{

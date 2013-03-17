@@ -121,6 +121,7 @@ class Page extends APP_Controller {
             $this->load->model('m_user');
 
             $user = $this->m_user->get($user_id);
+            $this->set('user', $user);
             
             $event_full_count = $this->m_event->get_count_by_user_id($this->site->id, $user_id);
 

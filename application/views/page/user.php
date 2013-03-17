@@ -1,5 +1,11 @@
+	<div class="user_page_wrap">
+		<div class="grid">
+			<?php print_r($user);?>
+		</div>
+	</div>	
 
 	<div class="grid contents_wrap">
+
 		<div class="create_header_wrap">
 			<form style="display: inline" action="<?php echo site_url('/create');?>" method="get">
 				<button class="blue"><span class="label">모임 만들기</span></button>
