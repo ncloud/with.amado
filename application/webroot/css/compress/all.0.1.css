@@ -2222,9 +2222,9 @@ iframe { border:none; }
 	.tip { cursor:default; }
 
 /* progress */
-	.bar_progress { position:relative; height:10px; background:#eee; overflow:hidden; }
-		.bar_progress .fill { position:absolute; height:10px; background:#f0270e; }
-		.bar_progress .remain { position:absolute; left:0; top:0; height:10px; background:#aaa; box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2), 0px 1px 1px rgba(255,255,255,0.2); }
+	.bar_progress { position:relative; height:10px; background:#eee; overflow:hidden; border-radius: 2px; }
+		.bar_progress .fill { position:absolute; height:10px; background:#f0270e; border-radius: 2px; }
+		.bar_progress .remain { position:absolute; left:0; top:0; height:10px; background:#aaa; border-radius: 2px; box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2), 0px 1px 1px rgba(255,255,255,0.2); }
 
 
 /* @fileRef layout.css */

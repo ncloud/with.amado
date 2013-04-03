@@ -432,6 +432,7 @@ class Page extends APP_Controller {
 
             $defaults['opt_enable_private_join'] = $event->opt_enable_private_join == 'yes' ? 'on' : 'off';
             $defaults['opt_add_input_contact'] = $event->opt_add_input_contact == 'yes' ? 'on' : 'off';
+            $defaults['opt_enable_waiting'] = $event->opt_enable_waiting == 'yes' ? 'on' : 'off';
 
             $defaults['url'] = $event->url;
 
@@ -685,6 +686,7 @@ class Page extends APP_Controller {
         $data->description = isset($form['description']) ? $form['description'] : '';
         $data->opt_enable_private_join = isset($form['opt_enable_private_join']) && $form['opt_enable_private_join'] == 'on' ? 'yes' : 'no';
         $data->opt_add_input_contact = isset($form['opt_add_input_contact']) && $form['opt_add_input_contact'] == 'on' ? 'yes' : 'no';
+        $data->opt_enable_waiting = isset($form['opt_enable_waiting']) && $form['opt_enable_waiting'] == 'on' ? 'yes' : 'no';
 
         if($url = (isset($form['url']) && !empty($form['url']) ? $form['url'] : false)) {
 

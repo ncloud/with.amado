@@ -8,6 +8,7 @@ CREATE TABLE `events` (
   `url` varchar(64) DEFAULT NULL,
   `opt_enable_private_join` enum('yes','no') DEFAULT 'yes',
   `opt_add_input_contact` enum('yes','no') DEFAULT 'no',
+  `opt_enable_waiting` enum('yes','no') DEFAULT 'no',
   `rsvp_now` int(11) unsigned DEFAULT '0',
   `rsvp_max` int(11) unsigned DEFAULT '0',
   `rsvp_button_text` varchar(32) DEFAULT NULL,
@@ -25,7 +26,7 @@ CREATE TABLE `events` (
   `end_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `site_id` (`site_id`,`url`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `role_users` (

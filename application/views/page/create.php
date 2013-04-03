@@ -70,14 +70,19 @@
 			<section class="input_group">
 				<section class="title">정원 <span class="required">*</span></section>
 				<section class="input">
-					<input type="text" name="rsvp_max" class="person" value="<?php echo isset($defaults['rsvp_max']) ? $defaults['rsvp_max'] : '';?>" /> <label>명</label>
+					<input type="text" id="rsvp_max" name="rsvp_max" class="person" value="<?php echo isset($defaults['rsvp_max']) ? $defaults['rsvp_max'] : '';?>" /> <label for="rsvp_max">명</label>
 					<?php
 						if(isset($errors['rsvp_max']) && !empty($errors['rsvp_max'])) {
 					?>
 					<p class="error">* <?php echo $errors['rsvp_max'];?></p>
 					<?php
 						}
+					
+						$default_opt_enable_waiting = isset($defaults['opt_enable_waiting']) && $defaults['opt_enable_waiting'] == 'on' ? true : false;
 					?>
+					<div class="sub_input">
+						<input type="checkbox" id="opt_enable_waiting" name="opt_enable_waiting" <?php echo $default_opt_enable_waiting ? 'checked="checked"' : '';?> /><label for="opt_enable_waiting">대기자 허용</label>
+					</div>
 				</section>
 			</section>
 			<section class="input_group">
