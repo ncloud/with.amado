@@ -1,11 +1,5 @@
 
 	<div class="grid contents_wrap">
-		<div class="create_header_wrap">
-			<form style="display: inline" action="<?php echo site_url('/create');?>" method="get">
-				<button class="blue"><span class="label">모임 만들기</span></button>
-			</form>
-		</div>
-
 		<h3 class="hint_title">내가 만든 모임</h3>
 		<div class="event_list">
 			<?php

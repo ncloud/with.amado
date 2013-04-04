@@ -77,7 +77,7 @@
 				</ul>
 
 				<div class="header">
-					<span class="profile"><img src="<?php echo $event->profile;?>" class="tip" title="<?php echo $event->display_name;?>" /></span>
+					<a href="<?php echo site_url('/user/'.$event->user_id);?>" class="profile"><img src="<?php echo $event->profile;?>" class="tip" title="<?php echo $event->display_name;?>" /></a>
 
 					<div class="button">
 						<?php

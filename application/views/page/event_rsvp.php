@@ -16,7 +16,13 @@
 		<h3 class="hint_title">참석자 목록</h3>
 		<ul class="rsvp_users">
 		<?php
+		if(!count($rsvp_users)) {
+		?>
+			<li class="empty">아직 참석자가 아직 없습니다</li>
+		<?php
+		} else {		
 			$index = 1;
+
 			foreach($rsvp_users as $user) {
 		?>
 		<li>
@@ -49,6 +55,7 @@
 		</li>
 		<?php
 			}
+		}
 		?>
 		</ul>
 	</div>

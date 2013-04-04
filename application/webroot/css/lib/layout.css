@@ -11,17 +11,19 @@ header { background:#fff; border-bottom:1px solid #ccc; box-shadow:0px 1px 2px r
 
 	header .main_menu { font-size:11px; margin-top:4px; }
 		header .main_menu h4 { font-size:12px; font-weight:bold; margin-bottom:4px; }
-		header .main_menu p { color:#666; }
+		header .main_menu p { color:#999; }
 
 	header .contents_wrap { padding-top:10px; padding-bottom:10px; }
 	header .user_wrap { text-align:right; }
-		header .user_wrap .user { display:inline-block; margin-right:10px; }
+		header .user_wrap .user { display:inline-block; margin-right:5px; }
 			header .user_wrap .user a { display:inline-block; color:#333; padding:5px; border-radius:4px; }
 			header .user_wrap .user a:hover {  background:#f4f4f4; }
 			header .user_wrap .user a:active { background:#eee; box-shadow:inset 0px 1px 1px rgba(0,0,0,0.1); }
 
-			header .user_wrap .user img { width: 30px; height:30px; display: inline-block; vertical-align: middle; margin-right: 4px; background:#eee; }
+			header .user_wrap .user img { width: 26px; height:26px; display: inline-block; vertical-align: middle; margin-right: 6px; background:#eee; border:1px solid #ddd; box-shadow:0px 1px 1px rgba(0,0,0,0.05); border-radius:4px; }
 			header .user_wrap .user span { display:inline-block; vertical-align:middle; }
+		
+		header .user_wrap .create_form { margin-right:3px; }
 
 #content { padding-bottom:10px; margin-top:20px; }
 
@@ -275,8 +277,8 @@ ul.events_column_list { margin-top:15px; }
 	ul.events_column_list > li p { color:#888; line-height:32px;}
 
 	ul.events_column_list > li .header { height:30px; margin-top:9px; padding-top:10px; border-top:1px dotted #ddd; }
-		ul.events_column_list li .header .profile { border-radius:2px; display:inline-block; width:30px; height:30px; overflow:hidden; }
-			ul.events_column_list > li .header .profile img { width:30px; }
+		ul.events_column_list li .header .profile { border-radius:2px; border:1px solid #ddd;  display:inline-block; width:30px; height:30px; overflow:hidden; }
+			ul.events_column_list > li .header .profile img { width:30px;  }
 
 	ul.events_column_list > li ul.detail_wrap { margin-top:12px; font-size:11px; }
 	 	ul.events_column_list > li ul.detail_wrap li { position:relative; line-height:18px; }
@@ -297,16 +299,18 @@ ul.rsvp_users {}
 		ul.rsvp_users > li { position:relative; font-size:12px; margin-bottom:10px; padding-bottom:10px; border-bottom:1px dotted #ccc; }
 		ul.rsvp_users > li:last-child { padding-bottom:0; border-bottom:0; }
 
-		ul.rsvp_users > li .number { vertical-align: middle; display: inline-block; font-weight:bold; color:#999; width:20px; text-align:center; }
-		ul.rsvp_users > li .profile { vertical-align: middle; display:inline-block; width:20px; height:20px; overflow:hidden; margin-right:5px; border: 1px solid #aaa; box-sizing: border-box; box-shadow:0px 1px 1px rgba(0,0,0,0.1); }
-			ul.rsvp_users > li .profile img { width:20px; }
+		ul.rsvp_users > li.empty { color:#888; }
 
-		ul.rsvp_users > li .name { vertical-align: middle; display:inline-block; font-weight:bold; line-height:20px; }
-		ul.rsvp_users > li .contact { margin-left:5px; vertical-align: middle; display:inline-block; color:#999; }
+			ul.rsvp_users > li .number { vertical-align: middle; display: inline-block; font-weight:bold; color:#999; width:20px; text-align:center; }
+			ul.rsvp_users > li .profile { vertical-align: middle; display:inline-block; width:20px; height:20px; overflow:hidden; margin-right:5px; border: 1px solid #aaa; box-sizing: border-box; box-shadow:0px 1px 1px rgba(0,0,0,0.1); }
+				ul.rsvp_users > li .profile img { width:20px; }
 
-		ul.rsvp_users > li p { display:block; margin-left:22px; margin-top:10px; color:#999; font-size:12px; line-height:18px; }
+			ul.rsvp_users > li .name { vertical-align: middle; display:inline-block; font-weight:bold; line-height:20px; }
+			ul.rsvp_users > li .contact { margin-left:5px; vertical-align: middle; display:inline-block; color:#999; }
 
-		ul.rsvp_users > li .date { position:absolute; right:0; top:4px; }
+			ul.rsvp_users > li p { display:block; margin-left:22px; margin-top:10px; color:#999; font-size:12px; line-height:18px; }
+
+			ul.rsvp_users > li .date { position:absolute; right:0; top:4px; }
 
 /* event_wrap */
 .event_title_wrap { position:relative; margin-bottom:20px; }
@@ -319,8 +323,16 @@ ul.rsvp_users {}
 	.event_title_wrap .status_wrap .remain { display:inline-block; padding-left:20px; height:20px; vertical-align:middle; line-height:20px; background:url(../../img/icon/clock.png) no-repeat left center; }
 
 /* user_wrap */
-.user_page_wrap { background:#f8f8f8; margin-top:-20px; margin-bottom:20px; padding-top:20px; padding-bottom:20px; border-bottom:1px solid #ccc; box-shadow:0px 1px 2px rgba(0,0,0,0.1); }
+.user_page_wrap { background:#f8f8f8; height:100px; margin-top:-20px; margin-bottom:20px; padding-top:20px; padding-bottom:20px; border-bottom:1px solid #ccc; box-shadow:0px 1px 2px rgba(0,0,0,0.1); }
+	.user_page_wrap .grid { position:relative;  }
+	.user_page_wrap .profile { position:absolute; left:10px; top:0; width:100px; height:100px; margin-right:10px; }
+		.user_page_wrap .profile img { width:100px; height:100px;  border:1px solid #ccc; border-radius:5px; box-shadow:0px 1px 1px rgba(0,0,0,0.1);  }
 
+	.user_page_wrap .data { margin-left:120px; padding-top:10px; }
+		.user_page_wrap .data h3 { font-weight:bold; font-size:15px; }
+		.user_page_wrap .data ul.info_wrap { margin-top:14px; color:#666; }
+		.user_page_wrap .data ul.info_wrap li { margin-top:6px; }
+			.user_page_wrap .data ul.info_wrap li strong { font-weight:bold; color:#444; }
 /* view */
 .view_wrap { padding-bottom:20px !important; font-size:13px;  }
 	.view_wrap article { }
@@ -336,8 +348,8 @@ ul.rsvp_users {}
 		.view_wrap .join_wrap p.finish { text-align:center; color:#999; }
 		.view_wrap .join_wrap p.please_login { text-align:center; color:#999; }
 
-	.view_wrap ul.rsvps { letter-spacing:5px; line-height:25px; margin-top:10px; padding-top:15px; border-top:1px dashed #ccc; }
-		.view_wrap ul.rsvps li { vertical-align:middle; width:28px; height:28px; overflow:hidden; box-shadow:0px 1px 1px rgba(0,0,0,0.1); display:inline-block; }
+	.view_wrap ul.rsvps { letter-spacing:5px; line-height:25px; margin-top:10px; display:inline-block; padding-top:15px; border-top:1px dashed #ccc; }
+		.view_wrap ul.rsvps li { vertical-align:middle; width:28px; height:28px; overflow:hidden; border:1px solid #bbb; background:#ccc; box-shadow:0px 1px 1px rgba(0,0,0,0.1); display:inline-block; }
 		.view_wrap ul.rsvps li img { width:28px; }
 		.view_wrap ul.rsvps li .private_profile { border:0; box-shadow:none; width:32px; height:28px; line-height:28px; font-size:15px; }
 

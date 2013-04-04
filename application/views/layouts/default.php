@@ -69,7 +69,7 @@
             <div class="row">
                 <h1 class='slot-0'><a href="<?php echo site_url('/');?>"><?php echo $title_for_layout;?></a></h1>
                 
-                <div class="slot-1-2-3">
+                <div class="slot-1-2">
                     <ul class="main_menu">
                         <li class="explore">
                             <h4><a href="<?php echo site_url('/explore');?>">모임 탐색</a></h4>
@@ -78,19 +78,22 @@
                     </ul>
                 </div>
 
-                <div class="slot-4-5 user_wrap">
+                <div class="slot-3-4-5 user_wrap">
                     <?php if($current_user->id) {
                     ?>
                     <span class="user">
                         <a href="<?php echo site_url('/user/' . $current_user->id);?>"><img src="<?php echo $current_user->profile;?>" alt="profile" /><span><?php echo $current_user->name;?></a>
                     </span></span>
-                    <form style="display: inline" action="<?php echo site_url('/logout');?>" method="get">
+                    <form class="create_form" style="display: inline" action="<?php echo site_url('/create');?>" method="get">
+                        <button class="blue"><span class="label">모임 만들기</span></button>
+                    </form>
+                    <form class="logout_form" style="display: inline" action="<?php echo site_url('/logout');?>" method="get">
                         <button class="red"><span class="label">로그아웃</span></button>
                     </form>
                     <?php
                     } else {
                     ?> 
-                    <form style="display: inline" onsubmit="user.facebook_login(); return false;" action="<?php echo site_url('/login');?>" method="get">
+                    <form class="login_form" style="display: inline" onsubmit="user.facebook_login(); return false;" action="<?php echo site_url('/login');?>" method="get">
                         <button class="blue"><span class="label">페이스북 로그인</span></button>
                     </form>
                     <?php

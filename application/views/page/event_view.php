@@ -212,7 +212,7 @@
 							<?php
 								} else {
 							?>
-							<img class="tip" title="<?php echo $rsvp->user_name;?>" src="<?php echo $rsvp->profile;?>" alt="" />
+							<a href="<?php echo site_url('/user/'.$rsvp->user_id);?>"><img class="tip" title="<?php echo $rsvp->display_name;?>" src="<?php echo $rsvp->profile;?>" alt="" /></a>
 							<?php
 								}
 							?>

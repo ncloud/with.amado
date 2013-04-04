@@ -1,11 +1,5 @@
 
 	<div class="grid contents_wrap">
-		<div class="create_header_wrap">
-			<form style="display: inline" action="<?php echo site_url('/create');?>" method="get">
-				<button class="blue"><span class="label">모임 만들기</span></button>
-			</form>
-		</div>
-
 		<?php
 			if(count($events)) {
 				echo $this->view('slices/event_column_list', array('id'=>'event_list','events'=>$events,'rsvp_users'=>$rsvp_users, 'rsvp_user_ids'=>$rsvp_user_ids));

@@ -26,7 +26,7 @@ class M_User extends CI_Model
         if($all_field) {
             $result = $this->db->get_where('users', $where)->row();
         } else {
-            $result = $this->db->from('users')->select('id, vendor_id, username, name, display_name, profile, language, login_count')->where($where)->get()->row();
+            $result = $this->db->from('users')->select('id, vendor_id, username, name, display_name, profile, language, login_count, create_time')->where($where)->get()->row();
         }
         
         return $this->combine_user_data($result);
