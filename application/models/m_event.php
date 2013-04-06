@@ -173,6 +173,23 @@ class m_event extends CI_Model
         return $this->db->delete('rsvps', array('event_id' => $event_id, 'user_id'=>$user_id));
     }
 
+    function rsvp_waiting_in($event_id, $user_id = null)
+    {
+        if(is_object($event_id)) {
+            $data = $event_id;
+        } else {
+            $data = new StdClass;
+            $data->event_id = $event_id;
+            $data->user_id = $user_id;
+        }
+
+        $data->is_waiting = 'yes';
+        
+        $data->insert_time = date('Y-m-d H:i:s', mktime());
+
+        return $this->db->insert('rsvps', $data);
+    }
+
     function check_in($event_id, $user_id) {
         if($this->db->from('rsvps')->where(array('event_id'=>$event_id, 'user_id'=>$user_id))->get()->row()) {
             return true;

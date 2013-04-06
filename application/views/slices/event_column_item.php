@@ -6,6 +6,12 @@
 				if(in_array($event->action, array('cancel','pause','finish'))) {
 					$hint_class = 'hint_cancel';
 					$is_disabled = true;
+				} else if($event->rsvp_now == $event->rsvp_max) {
+					if($event->opt_enable_waiting == 'yes') { // 대기자 허용
+
+					} else { // 대기 불가
+						$is_disabled = true;
+					}
 				} else {
 					if($rsvp_time - mktime() <= 60*60*24) { // 오늘 이벤트
 						$hint_class = 'hint_1';
@@ -99,7 +105,17 @@
 								} else {
 						?>
 							<form style="display: inline" action="<?php echo site_url('/event/in/' . $event->id);?>" method="get">
+						<?php		
+								 if($event->rsvp_now == $event->rsvp_max) {
+						?>
+								<button><span class="label">대기하기</span></button>
+						<?php
+								 } else {
+						?>
 								<button class="green"><span class="label">참석하기</span></button>
+						<?php
+								}
+						?>
 							</form>
 						<?php
 								}

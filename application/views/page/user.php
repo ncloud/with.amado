@@ -7,7 +7,7 @@
 				<?php
 					if($user->vendor_id == FACEBOOK_VENDOR) {
 				?>
-					<li class="facebook"><strong>페이스북</strong> : <a href="http://facebook.com/<?php echo $user->fb_id;?>" target="_blank">http://facebook.com/<?php echo $user->fb_id;?></a></li>
+					<li class="facebook"><strong>페이스북</strong> : <a href="<?php echo $user->link;?>" target="_blank"><?php echo $user->link;?></a></li>
 				<?php
 					}
 				?>

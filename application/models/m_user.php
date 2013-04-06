@@ -26,7 +26,7 @@ class M_User extends CI_Model
         if($all_field) {
             $result = $this->db->get_where('users', $where)->row();
         } else {
-            $result = $this->db->from('users')->select('id, vendor_id, username, name, display_name, profile, language, login_count, create_time')->where($where)->get()->row();
+            $result = $this->db->from('users')->select('id, vendor_id, username, name, display_name, link, profile, language, login_count, create_time')->where($where)->get()->row();
         }
         
         return $this->combine_user_data($result);
@@ -45,7 +45,7 @@ class M_User extends CI_Model
         $this->db->from('users')->where_in('id', $user_ids);
         
         if(!$all_field) {
-            $this->db->select('id, vendor_id, username, name, display_name, profile, language, login_count');
+            $this->db->select('id, vendor_id, username, name, display_name, link, profile, language, login_count');
         }
         
         $user_result = array();
@@ -227,7 +227,7 @@ class M_User extends CI_Model
     }
     
     // ncloud
-    public function authenticate_vendor($vendor_name, $uid, $name, $display_name, $profile = '', $email = '')
+    public function authenticate_vendor($vendor_name, $uid, $name, $display_name, $profile = '', $email = '', $link = '')
     {
         $this->load->library('auth');
         $this->load->library('input');
@@ -243,10 +243,11 @@ class M_User extends CI_Model
         
         if(!empty($user)) {
 
-            if($user->display_name != $display_name  || $user->profile != $profile || $user->email != $email) {
+            if($user->display_name != $display_name  || $user->profile != $profile || $user->email != $email || $user->link != $link) {
                 $user->display_name = $display_name;
                 $user->profile = $profile;
                 $user->email = $email;
+                $user->link = $link;
                 
                 $this->db->where('id', $user->id);
                 $this->db->update('users', $user);
@@ -268,6 +269,7 @@ class M_User extends CI_Model
             $user->vendor_user_id       = $uid;
             $user->name                 = $name;  
             $user->display_name         = $display_name; // NOTE: Temperary until user able to assign display name upon registration
+            $user->link                 = $link;
             $user->password             = $this->auth->password($password);
             $user->random_password      = $password;
             $user->activation_key       = strtolower(random_string('alnum', 32));

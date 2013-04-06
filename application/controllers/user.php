@@ -161,8 +161,9 @@ class User extends APP_Controller
                         
                         $display_name = isset($me['username']) ? $me['username'] : $me['name'];
                         $email = isset($me['email']) ? $me['email'] : '';
+                        $link = isset($me['link']) ? $me['link'] : '';
                         
-                        $user = $this->m_user->authenticate_vendor('facebook', $me['id'], $me['name'], $display_name, $profile, $email);
+                        $user = $this->m_user->authenticate_vendor('facebook', $me['id'], $me['name'], $display_name, $profile, $email, $link);
                         if($user->now_joined) { // 지금 첫 가입했을 경우 ..
                            
                         }

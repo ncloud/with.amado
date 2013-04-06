@@ -124,6 +124,12 @@ class Page extends APP_Controller {
             if($user->vendor_id == FACEBOOK_VENDOR) {
                 $t =  explode('_',$user->username);  
                 $user->fb_id = $t[1]; // for Facebook userid
+
+                if(empty($user->link)) {
+                    $user->link = 'http://facebook.com/'.$user->fb_id;
+                }
+
+                $user->link = str_replace('www.facebook', 'facebook', $user->link);
             }
 
             $this->set('user', $user);
@@ -315,16 +321,25 @@ class Page extends APP_Controller {
             if($_POST && !empty($_POST)) {
                 if($this->m_event->check_in($id, $this->user_data->id)) { // 이미 참석함
                     $this->__auto_redirect($event);
-                } else if($event->rsvp_max == $event->rsvp_now) { // 정원이 가득참
+                } else if($event->rsvp_max == $event->rsvp_now && $event->opt_enable_waiting == 'no') { // 정원이 가득참
                     $this->__auto_redirect($event);
                 } else {
                     $errors = array();
 
                     if($data = $this->__in($event, $_POST, $errors)) {
-                        $this->m_event->rsvp_in($data);
-                        $this->m_event->event_increment_count($event->id, 'rsvp_now');
 
-                        $this->m_history->add($event->id, $this->user_data->id, 'RSVP_IN', array('%1님이 "%2" 이벤트에 참석합니다.', array($this->user_data->id, $event->id)));
+                        if($event->rsvp_max == $event->rsvp_now) {    
+                            $this->m_event->rsvp_waiting_in($data);
+                            $this->m_event->event_increment_count($event->id, 'rsvp_waiting');
+
+                            $this->m_history->add($event->id, $this->user_data->id, 'RSVP_WAITING_IN', array('%1님이 "%2" 이벤트에 대기합니다.', array($this->user_data->id, $event->id)));
+                        } else {
+                            $this->m_event->rsvp_in($data);
+                            $this->m_event->event_increment_count($event->id, 'rsvp_now');                        
+
+                            $this->m_history->add($event->id, $this->user_data->id, 'RSVP_IN', array('%1님이 "%2" 이벤트에 참석합니다.', array($this->user_data->id, $event->id)));
+                        }
+
 
                         $this->__auto_redirect($event);
                     }
@@ -340,7 +355,7 @@ class Page extends APP_Controller {
                 $error_message = '';
                 if($this->m_event->check_in($id, $this->user_data->id)) { // 이미 참석함
                     $error_message = '이미 참석하셨습니다.';
-                } else if($event->rsvp_max == $event->rsvp_now) { // 정원이 가득참
+                } else if($event->rsvp_max == $event->rsvp_now && $event->opt_enable_waiting == 'no') { // 정원이 가득참
                     $error_message = '정원이 찼습니다.';
                 } 
 

@@ -348,7 +348,7 @@ ul.rsvp_users {}
 		.view_wrap .join_wrap p.finish { text-align:center; color:#999; }
 		.view_wrap .join_wrap p.please_login { text-align:center; color:#999; }
 
-	.view_wrap ul.rsvps { letter-spacing:5px; line-height:25px; margin-top:10px; display:inline-block; padding-top:15px; border-top:1px dashed #ccc; }
+	.view_wrap ul.rsvps { width:100%; letter-spacing:5px; line-height:25px; margin-top:10px; display:inline-block; padding-top:15px; border-top:1px dashed #ccc; }
 		.view_wrap ul.rsvps li { vertical-align:middle; width:28px; height:28px; overflow:hidden; border:1px solid #bbb; background:#ccc; box-shadow:0px 1px 1px rgba(0,0,0,0.1); display:inline-block; }
 		.view_wrap ul.rsvps li img { width:28px; }
 		.view_wrap ul.rsvps li .private_profile { border:0; box-shadow:none; width:32px; height:28px; line-height:28px; font-size:15px; }

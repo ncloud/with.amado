@@ -167,7 +167,7 @@
 					} else {
 						if($me_rsvp_in) {
 				?>
-					이미 참가신청하셨습니다. 
+					참가신청하셨습니다. 
 
 					<form style="display: inline" action="<?php echo site_url('/event/out/' . $event->id);?>" onsubmit="return confirm('정말로 참석을 취소하시겠습니까?');" method="get">
 						<button class="red"><span class="label">참석 취소</span></button>
@@ -175,9 +175,19 @@
 				<?php
 						} else {
 							if($event->rsvp_max == $event->rsvp_now) {
+								if($event->opt_enable_waiting == 'yes') {
 				?>
-					<p class="finish">정원이 가득 찼습니다.</p>
+					정원이 가득찼습니다.
+
+					<form style="display: inline" action="<?php echo site_url('/event/in/' . $event->id);?>" method="get">
+						<button><span class="label">대기하기</span></button>
+					</form>
 				<?php
+								} else {
+				?>
+					<p class="finish">정원이 가득찼습니다.</p>
+				<?php
+								}
 							} else {
 
 								if($current_user->id) {
